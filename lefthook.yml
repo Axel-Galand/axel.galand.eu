@@ -1,0 +1,21 @@
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: gitleaks git --staged --no-banner --redact .
+    prettier:
+      glob: '*.{ts,tsx,js,mjs,cjs,json,css,scss,md,yml,yaml}'
+      run: pnpm exec prettier --check {staged_files}
+    eslint:
+      glob: '*.{ts,tsx,js,mjs}'
+      run: pnpm exec eslint --max-warnings=0 --no-warn-ignored {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
+
+pre-push:
+  commands:
+    typecheck:
+      run: pnpm typecheck

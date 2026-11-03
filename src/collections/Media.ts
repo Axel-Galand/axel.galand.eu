@@ -12,5 +12,8 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    // Local storage until the Cloudinary adapter lands; /data/media is on the Coolify volume.
+    staticDir: process.env.MEDIA_DIR || 'media',
+  },
 }

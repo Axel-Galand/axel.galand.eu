@@ -1,20 +1,38 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+
+import { serverURL as baseURL } from '../helpers/serverURL'
 
 test.describe('Frontend', () => {
-  let page: Page
+  test('can go on homepage', async ({ page }) => {
+    await page.goto(baseURL)
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const context = await browser.newContext()
-    page = await context.newPage()
+    await expect(page).toHaveTitle(/Axel Galand/)
+    await expect(page.locator('h1').first()).toHaveText('Axel Galand')
   })
 
-  test('can go on homepage', async ({ page }) => {
-    await page.goto('http://localhost:3000')
+  test('stays noindex while SITE_INDEXABLE is not "true"', async ({ page }) => {
+    const response = await page.goto(baseURL)
 
-    await expect(page).toHaveTitle(/Payload Blank Template/)
+    expect(response?.headers()['x-robots-tag']).toBe('noindex, nofollow')
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex, nofollow',
+    )
+  })
 
-    const heading = page.locator('h1').first()
+  test('robots.txt allows crawling so the noindex stays visible', async ({ request }) => {
+    const response = await request.get(`${baseURL}/robots.txt`)
+    const body = await response.text()
 
-    await expect(heading).toHaveText('Welcome to your new project.')
+    expect(response.ok()).toBe(true)
+    expect(body).toContain('Allow: /')
+    expect(body).not.toContain('Disallow')
+  })
+
+  test('healthz reports the database as reachable', async ({ request }) => {
+    const response = await request.get(`${baseURL}/healthz`)
+
+    expect(response.status()).toBe(200)
+    expect(await response.json()).toEqual({ status: 'ok' })
   })
 })

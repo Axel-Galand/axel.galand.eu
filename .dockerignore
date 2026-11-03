@@ -1,0 +1,15 @@
+.git
+.github
+.claude
+.next
+node_modules
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+media
+coverage
+test-results
+playwright-report
+blob-report

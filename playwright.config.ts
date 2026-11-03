@@ -6,6 +6,8 @@ import { defineConfig, devices } from '@playwright/test'
  */
 import 'dotenv/config'
 
+import { e2ePort, serverURL } from './tests/helpers/serverURL'
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -22,7 +24,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: serverURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -34,8 +36,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
+    command: `pnpm dev --port ${e2ePort}`,
+    // CSRF and CORS only trust SERVER_URL, so it must match the e2e port.
+    env: { SERVER_URL: serverURL },
     reuseExistingServer: true,
-    url: 'http://localhost:3000',
+    url: serverURL,
   },
 })

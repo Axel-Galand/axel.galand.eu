@@ -1,6 +1,8 @@
 import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 
+import { serverURL as defaultServerURL } from './serverURL'
+
 export interface LoginOptions {
   page: Page
   serverURL?: string
@@ -15,7 +17,7 @@ export interface LoginOptions {
  */
 export async function login({
   page,
-  serverURL = 'http://localhost:3000',
+  serverURL = defaultServerURL,
   user,
 }: LoginOptions): Promise<void> {
   await page.goto(`${serverURL}/admin/login`)

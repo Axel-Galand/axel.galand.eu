@@ -7,11 +7,22 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Read at runtime (not NEXT_PUBLIC_), so the same image works for any host.
+const serverURL = process.env.SERVER_URL || 'http://localhost:3000'
+
 export default buildConfig({
+  serverURL,
+  csrf: [serverURL],
+  cors: [serverURL],
+  // The admin only needs REST; GraphQL would be one more public surface.
+  graphQL: {
+    disable: true,
+  },
   admin: {
     user: Users.slug,
     importMap: {
@@ -28,6 +39,8 @@ export default buildConfig({
     client: {
       url: process.env.DATABASE_URL || '',
     },
+    // Applied on startup in production; dev keeps Payload's schema push.
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [],
