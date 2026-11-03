@@ -4,15 +4,13 @@ on:
   push:
     branches: [main]
   pull_request:
-  # gitleaks-action only scans the full history on these two events; a push scans its commits.
   workflow_dispatch:
+  # Weekly run, to notice dependency or toolchain drift even without commits.
   schedule:
     - cron: '17 6 * * 1'
 
 permissions:
   contents: read
-  # gitleaks-action lists the PR commits through the API.
-  pull-requests: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -30,10 +28,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Scan for secrets
-        uses: gitleaks/gitleaks-action@v3
+      # The gitleaks CLI scans the whole history on every run. gitleaks-action only scans the pushed
+      # range, which fails (and scans nothing) when a push contains the root commit.
+      - name: Scan the full history for secrets
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          archive="$RUNNER_TEMP/gitleaks.tar.gz"
+          curl -fsSL -o "$archive" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $archive" | sha256sum -c -
+          tar -xzf "$archive" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" git --no-banner --redact .
 
       - uses: pnpm/action-setup@v6
 

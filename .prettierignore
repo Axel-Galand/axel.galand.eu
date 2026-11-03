@@ -9,6 +9,3 @@ AGENTS.md
 .claude/
 
 pnpm-lock.yaml
-
-# Written by gitleaks-action in CI
-results.sarif
