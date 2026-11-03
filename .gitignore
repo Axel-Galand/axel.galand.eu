@@ -55,3 +55,6 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Written by gitleaks-action in CI
+results.sarif
