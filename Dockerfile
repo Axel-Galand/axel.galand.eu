@@ -11,6 +11,9 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
+# The robots meta tag is fixed at build time; anything but "true" builds a noindex site.
+ARG SITE_INDEXABLE=false
+ENV SITE_INDEXABLE=$SITE_INDEXABLE
 RUN npm install -g pnpm@12.16.1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
