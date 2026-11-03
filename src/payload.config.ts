@@ -8,12 +8,13 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { migrations } from './migrations'
+import { getServerURL } from './lib/serverURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 // Read at runtime (not NEXT_PUBLIC_), so the same image works for any host.
-const serverURL = process.env.SERVER_URL || 'http://localhost:3000'
+const serverURL = getServerURL()
 
 export default buildConfig({
   serverURL,

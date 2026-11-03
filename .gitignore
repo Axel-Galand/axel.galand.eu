@@ -40,6 +40,10 @@ next-env.d.ts
 
 .env
 
+# Local Claude Code files, kept out of the public repo
+CLAUDE.md
+.claude/
+
 # SQLite databases (dev, tests) and local uploads
 *.db
 *.db-*

@@ -4,9 +4,15 @@ on:
   push:
     branches: [main]
   pull_request:
+  # gitleaks-action only scans the full history on these two events; a push scans its commits.
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'
 
 permissions:
   contents: read
+  # gitleaks-action lists the PR commits through the API.
+  pull-requests: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -44,13 +50,15 @@ jobs:
 
   deploy:
     needs: check
-    # Skipped until the Coolify app exists and its UUID is set as a repository variable.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.COOLIFY_APP_UUID != ''
+    # Skipped until the Coolify app exists and its URL and UUID are set as repository variables.
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+      vars.COOLIFY_URL != '' && vars.COOLIFY_APP_UUID != ''
     runs-on: ubuntu-latest
     steps:
       - name: Trigger the Coolify deployment
         env:
-          COOLIFY_URL: https://coolify.axel.galand.eu
+          COOLIFY_URL: ${{ vars.COOLIFY_URL }}
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_DEPLOY_TOKEN }}
           APP_UUID: ${{ vars.COOLIFY_APP_UUID }}
         run: |
