@@ -1,6 +1,10 @@
 import type { Access, CollectionConfig } from 'payload'
 
-const selfOnly: Access = ({ req: { user } }) => (user ? { id: { equals: user.id } } : false)
+import { isAdminUser } from '@/access'
+
+// The collection check matters: an MCP API-key doc can share its numeric id with a user.
+const selfOnly: Access = ({ req: { user } }) =>
+  user && isAdminUser(user) ? { id: { equals: user.id } } : false
 
 export const Users: CollectionConfig = {
   slug: 'users',

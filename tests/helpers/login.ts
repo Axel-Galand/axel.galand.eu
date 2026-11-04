@@ -28,6 +28,6 @@ export async function login({
 
   await page.waitForURL(`${serverURL}/admin`)
 
-  const dashboardArtifact = page.locator('span[title="Dashboard"]')
+  const dashboardArtifact = page.locator('span[title="Tableau de bord"]')
   await expect(dashboardArtifact).toBeVisible()
 }

@@ -22,7 +22,7 @@ test.describe('Admin Panel', () => {
   test('can navigate to dashboard', async () => {
     await page.goto(`${serverURL}/admin`)
     await expect(page).toHaveURL(`${serverURL}/admin`)
-    const dashboardArtifact = page.locator('span[title="Dashboard"]').first()
+    const dashboardArtifact = page.locator('span[title="Tableau de bord"]').first()
     await expect(dashboardArtifact).toBeVisible()
   })
 
@@ -39,4 +39,21 @@ test.describe('Admin Panel', () => {
     const editViewArtifact = page.locator('input[name="email"]')
     await expect(editViewArtifact).toBeVisible()
   })
+
+  // Every collection and global of the content model opens in the (French) admin.
+  for (const [path, heading] of [
+    ['collections/case-studies', 'Études de cas'],
+    ['collections/notes', 'Notes techniques'],
+    ['collections/albums', 'Albums'],
+    ['collections/experiences', 'Expériences et formations'],
+    ['collections/skills', 'Compétences'],
+    ['collections/media', 'Médias'],
+    ['globals/profile', 'Profil'],
+    ['globals/site-settings', 'Réglages du site'],
+  ] as const) {
+    test(`opens ${path}`, async () => {
+      await page.goto(`${serverURL}/admin/${path}`)
+      await expect(page.locator('h1', { hasText: heading }).first()).toBeVisible()
+    })
+  }
 })
