@@ -27,6 +27,17 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
 | `pnpm migrate:create <nom>`    | Nouvelle migration après un changement de schéma      |
 | `pnpm generate:types`          | Régénère `src/payload-types.ts`                       |
 
+## Branches
+
+Git flow à deux branches longues :
+
+- `develop` : branche de travail et branche par défaut. Les branches courtes partent d'ici
+  (`feature/`, `bugfix/`, `chore/`) et y reviennent.
+- `prod` : ce qui est en ligne. Protégée : on y arrive par une pull request depuis `develop` (ou une
+  `hotfix/`), avec la CI verte. Chaque push sur `prod` déclenche le déploiement Coolify.
+
+La CI tourne sur `develop`, `prod` et toutes les pull requests. Seul `prod` déploie.
+
 ## Production
 
 - Image construite par le `Dockerfile` (sortie `standalone`, Node 26, utilisateur non root).

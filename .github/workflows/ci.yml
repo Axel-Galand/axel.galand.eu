@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [develop, prod]
   pull_request:
   workflow_dispatch:
   # Weekly run, to notice dependency or toolchain drift even without commits.
@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  # Only superseded PR runs are cancelled: a run on main may be about to deploy.
+  # Only superseded PR runs are cancelled: a run on prod may be about to deploy.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -58,9 +58,9 @@ jobs:
 
   deploy:
     needs: check
-    # Skipped until the Coolify app exists and its URL and UUID are set as repository variables.
+    # Only a push to prod deploys. Skipped while the Coolify URL and app UUID variables are unset.
     if: >-
-      github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' && github.ref == 'refs/heads/prod' &&
       vars.COOLIFY_URL != '' && vars.COOLIFY_APP_UUID != ''
     runs-on: ubuntu-latest
     steps:
