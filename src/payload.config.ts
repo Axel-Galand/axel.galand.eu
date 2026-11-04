@@ -22,6 +22,7 @@ import { documentPath, homePath, isSectionSlug } from './lib/paths'
 import { getServerURL } from './lib/serverURL'
 import { writeRichTextTool } from './mcp/writeRichText'
 import { migrations } from './migrations'
+import { revalidateSiteOn } from './plugins/revalidateSite'
 import { cloudinaryStrictURLs } from './plugins/cloudinaryStrictURLs'
 import { undoFailedUploads } from './plugins/undoFailedUploads'
 
@@ -80,6 +81,9 @@ export default buildConfig({
     },
     // Applied on startup in production; dev keeps Payload's schema push.
     prodMigrations: migrations,
+    // Wait for another process's write (the backup's read, e2e workers) instead of failing at once.
+    // Without transactions the adapter keeps one connection, so the pragma covers every query.
+    busyTimeout: 5000,
   }),
   sharp,
   plugins: [
@@ -88,7 +92,8 @@ export default buildConfig({
       globals: ['profile'],
       uploadsCollection: 'media',
       tabbedUI: true,
-      generateTitle: ({ doc }) => (doc?.title ? `${doc.title} · Axel Galand` : 'Axel Galand'),
+      // The site's title template adds " · Axel Galand".
+      generateTitle: ({ doc }) => doc?.title ?? 'Axel Galand',
       generateDescription: ({ doc }) => doc?.summary ?? doc?.excerpt ?? doc?.description ?? '',
       generateURL: ({ doc, collectionConfig, locale }) => {
         const lang = locale === 'en' ? 'en' : 'fr'
@@ -139,5 +144,10 @@ export default buildConfig({
       },
     }),
     ...(useCloudinary ? [cloudinaryStrictURLs(cloudName), undoFailedUploads()] : []),
+    // Everything the public pages show, media included (alt texts, captions).
+    revalidateSiteOn({
+      collections: ['case-studies', 'notes', 'albums', 'experiences', 'skills', 'media'],
+      globals: ['profile', 'site-settings'],
+    }),
   ],
 })

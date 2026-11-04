@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated, isAdminUser } from '@/access'
+import { frenchTextFallback } from '@/hooks/frenchTextFallback'
 import { setBlurDataURL } from '@/hooks/setBlurDataURL'
 
 export const Media: CollectionConfig = {
@@ -30,8 +31,15 @@ export const Media: CollectionConfig = {
       localized: true,
       label: 'Texte alternatif',
       admin: { description: 'Décrit l’image pour les lecteurs d’écran et le SEO.' },
+      hooks: { afterRead: [frenchTextFallback('media')] },
     },
-    { name: 'caption', type: 'text', localized: true, label: 'Légende' },
+    {
+      name: 'caption',
+      type: 'text',
+      localized: true,
+      label: 'Légende',
+      hooks: { afterRead: [frenchTextFallback('media')] },
+    },
     {
       name: 'blurDataUrl',
       type: 'text',

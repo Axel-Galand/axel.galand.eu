@@ -2,11 +2,12 @@ import type { GlobalConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceGlobalDraftForMcp } from '@/hooks/forceDraftForMcp'
+import { previewRoute } from '@/lib/preview'
 
 export const Profile: GlobalConfig = {
   slug: 'profile',
   label: 'Profil',
-  admin: { group: 'Parcours' },
+  admin: { group: 'Parcours', preview: previewRoute('/') },
   access: {
     read: publishedOrAuthenticated,
     update: authenticated,

@@ -1,0 +1,97 @@
+{
+  "site": {
+    "skip": "Skip to content",
+    "nav": "Main navigation",
+    "home": "Home",
+    "projects": "Projects",
+    "background": "Background",
+    "notes": "Notes",
+    "personal": "Personal",
+    "legal": "Legal notice",
+    "rss": "Notes RSS feed",
+    "switchTo": "Français",
+    "switchLabel": "Lire en français"
+  },
+  "preview": {
+    "banner": "Preview: drafts are shown.",
+    "exit": "Exit preview"
+  },
+  "home": {
+    "featured": "Featured projects",
+    "allProjects": "All projects",
+    "latestNotes": "Latest notes",
+    "allNotes": "All notes",
+    "links": "Find me",
+    "email": "Email"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Anonymized case studies of client projects.",
+    "empty": "No project published yet.",
+    "sector": "Sector",
+    "role": "Role",
+    "period": "Period",
+    "present": "present",
+    "stack": "Stack",
+    "metrics": "Key figures",
+    "context": "Context",
+    "challenge": "Challenge",
+    "work": "What I did",
+    "result": "Outcome",
+    "learnings": "Takeaways",
+    "diagram": "Architecture diagram"
+  },
+  "background": {
+    "title": "Background",
+    "description": "Experience, education and skills.",
+    "jobs": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "languages": "Languages",
+    "certifications": "Certifications",
+    "cv": "Download the résumé (PDF)",
+    "related": "Related projects",
+    "categories": {
+      "front": "Front end",
+      "back": "Back end",
+      "mobile": "Mobile",
+      "cms": "CMS",
+      "data": "Data",
+      "infra": "Infrastructure and DevOps",
+      "quality": "Quality and testing",
+      "tooling": "AI and tooling"
+    }
+  },
+  "notes": {
+    "title": "Notes",
+    "description": "Technical notes.",
+    "empty": "No note published yet.",
+    "published": "Published on {date}",
+    "feedTitle": "Notes · Axel Galand",
+    "feedDescription": "Technical notes by Axel Galand."
+  },
+  "personal": {
+    "title": "Personal",
+    "description": "Photos from my enduro seasons, and elsewhere.",
+    "empty": "No album published yet.",
+    "season": "{season} season",
+    "photos": "{count, plural, =0 {No photos} one {# photo} other {# photos}}"
+  },
+  "legal": {
+    "title": "Legal notice"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist, or not in this language.",
+    "back": "Back to the home page"
+  },
+  "cv": {
+    "title": "Résumé",
+    "jobs": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "languages": "Languages",
+    "certifications": "Certifications",
+    "present": "present"
+  }
+}

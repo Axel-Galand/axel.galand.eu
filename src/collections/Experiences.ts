@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceDraftForMcp } from '@/hooks/forceDraftForMcp'
+import { previewRoute } from '@/lib/preview'
 
 const monthPicker = {
   date: { pickerAppearance: 'monthOnly' as const, displayFormat: 'MM/yyyy' },
@@ -12,6 +13,7 @@ export const Experiences: CollectionConfig = {
   labels: { singular: 'Expérience ou formation', plural: 'Expériences et formations' },
   admin: {
     useAsTitle: 'organization',
+    preview: previewRoute('/parcours'),
     defaultColumns: ['organization', 'role', 'kind', 'start'],
     group: 'Parcours',
   },

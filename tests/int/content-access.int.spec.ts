@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { findPublished, findPublishedGlobal } from '@/lib/content'
+import { findPublic, findPublicGlobal, type Reader } from '@/lib/content'
 import type { User } from '@/payload-types'
 
 import { apiKeyDocUser, createAdmin, testPayload } from '../helpers/payload'
@@ -9,6 +9,7 @@ import { apiKeyDocUser, createAdmin, testPayload } from '../helpers/payload'
 let payload: Payload
 let admin: User
 const marker = `access-${Date.now()}`
+const visitor: Reader = { draft: false }
 const createdIds: number[] = []
 
 const caseStudy = (title: string) => ({
@@ -43,10 +44,11 @@ describe('content access', () => {
       where: { slug: { like: marker } },
       overrideAccess: false,
     })
-    const helper = await findPublished({
+    const helper = await findPublic({
       collection: 'case-studies',
       where: { slug: { like: marker } },
       locale: 'fr',
+      reader: visitor,
     })
 
     expect(anonymous.docs).toHaveLength(0)
@@ -66,10 +68,11 @@ describe('content access', () => {
       draft: true,
     })
 
-    const { docs } = await findPublished({
+    const { docs } = await findPublic({
       collection: 'case-studies',
       where: { id: { equals: doc.id } },
       locale: 'fr',
+      reader: visitor,
     })
 
     expect(docs.map((d) => d.title)).toEqual(['Live'])
@@ -102,20 +105,55 @@ describe('content access', () => {
     ).rejects.toThrow()
   })
 
-  it('falls back to French when the English version is missing', async () => {
+  it('leaves a document out of English until its English title exists', async () => {
     const doc = await payload.create({
       collection: 'case-studies',
       data: { ...caseStudy('Seulement en français'), _status: 'published' },
       locale: 'fr',
     })
+    const inEnglish = () =>
+      findPublic({
+        collection: 'case-studies',
+        where: { id: { equals: doc.id } },
+        locale: 'en',
+        reader: visitor,
+      })
 
-    const { docs } = await findPublished({
+    expect((await inEnglish()).docs).toHaveLength(0)
+
+    await payload.update({
       collection: 'case-studies',
-      where: { id: { equals: doc.id } },
+      id: doc.id,
       locale: 'en',
+      data: { title: 'Now in English', summary: 'Summary', sector: 'Sector', _status: 'published' },
     })
 
-    expect(docs[0]?.title).toBe('Seulement en français')
+    expect((await inEnglish()).docs.map((d) => d.title)).toEqual(['Now in English'])
+  })
+
+  it('shows drafts to the admin reader of the preview only', async () => {
+    const doc = await payload.create({
+      collection: 'case-studies',
+      data: { ...caseStudy('Preview'), _status: 'published' },
+    })
+    await payload.update({
+      collection: 'case-studies',
+      id: doc.id,
+      data: { title: 'Preview, edited in a draft' },
+      draft: true,
+    })
+    const titleFor = async (reader: Reader) =>
+      (
+        await findPublic({
+          collection: 'case-studies',
+          where: { id: { equals: doc.id } },
+          locale: 'fr',
+          reader,
+        })
+      ).docs.map((d) => d.title)
+
+    expect(await titleFor(visitor)).toEqual(['Preview'])
+    expect(await titleFor({ draft: true, user: admin })).toEqual(['Preview, edited in a draft'])
   })
 
   it('derives the slug from the title and refuses duplicates', async () => {
@@ -148,7 +186,11 @@ describe('content access', () => {
       draft: true,
     })
 
-    const settings = await findPublishedGlobal({ slug: 'site-settings', locale: 'fr' })
+    const settings = await findPublicGlobal({
+      slug: 'site-settings',
+      locale: 'fr',
+      reader: visitor,
+    })
     const anonymousDraft = await payload.findGlobal({
       slug: 'site-settings',
       draft: true,

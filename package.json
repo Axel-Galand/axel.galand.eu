@@ -32,14 +32,17 @@
     "@payloadcms/richtext-lexical": "3.92.1",
     "@payloadcms/translations": "3.92.1",
     "@payloadcms/ui": "3.92.1",
+    "@react-pdf/renderer": "4.9.0",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
     "next": "16.4.4",
+    "next-intl": "4.14.9",
     "payload": "3.92.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "sharp": "0.35.4",
+    "shiki": "4.5.0",
     "zod": "3.25.76"
   },
   "devDependencies": {

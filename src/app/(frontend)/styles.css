@@ -1,164 +1,123 @@
+/* Deliberately bare until the design step: readable defaults, light and dark. */
 :root {
-  --font-mono: 'Roboto Mono', monospace;
+  color-scheme: light dark;
+  --text: #1b1b1f;
+  --muted: #5d5d66;
+  --bg: #ffffff;
+  --line: #e2e2e6;
+  --accent: #5b3fd6;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #ececf1;
+    --muted: #a1a1ab;
+    --bg: #121216;
+    --line: #2c2c33;
+    --accent: #a594ff;
+  }
+
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  font-size: 18px;
-  line-height: 32px;
-
-  background: rgb(0, 0, 0);
-  -webkit-font-smoothing: antialiased;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-}
-
 body {
-  font-family: system-ui;
-  font-size: 18px;
-  line-height: 32px;
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: 1rem;
+  color: var(--text);
+  background: var(--bg);
+}
 
-  margin: 0;
-  color: rgb(1000, 1000, 1000);
-
-  @media (max-width: 1024px) {
-    font-size: 15px;
-    line-height: 24px;
-  }
+a {
+  color: var(--accent);
 }
 
 img {
   max-width: 100%;
   height: auto;
-  display: block;
 }
 
-h1 {
-  margin: 40px 0;
-  font-size: 64px;
-  line-height: 70px;
-  font-weight: bold;
-
-  @media (max-width: 1024px) {
-    margin: 24px 0;
-    font-size: 42px;
-    line-height: 42px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 38px;
-    line-height: 38px;
-  }
-
-  @media (max-width: 400px) {
-    font-size: 32px;
-    line-height: 32px;
-  }
+.skip {
+  position: absolute;
+  left: -999px;
 }
 
-p {
-  margin: 24px 0;
-
-  @media (max-width: 1024px) {
-    margin: calc(var(--base) * 0.75) 0;
-  }
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
 }
 
-a {
-  color: currentColor;
-
-  &:focus {
-    opacity: 0.8;
-    outline: none;
-  }
-
-  &:active {
-    opacity: 0.7;
-    outline: none;
-  }
+.preview {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
 }
 
-svg {
-  vertical-align: middle;
-}
-
-.home {
+.site-header,
+.site-footer {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
   justify-content: space-between;
-  align-items: center;
-  height: 100vh;
-  padding: 45px;
-  max-width: 1024px;
-  margin: 0 auto;
-  overflow: hidden;
+  padding: 1rem 0;
+}
 
-  @media (max-width: 400px) {
-    padding: 24px;
-  }
+.site-header ul,
+.site-footer ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
+.site-name {
+  font-weight: 700;
+}
 
-    h1 {
-      text-align: center;
-    }
-  }
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 3rem;
+  font-size: 0.9rem;
+}
 
-  .links {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.muted {
+  color: var(--muted);
+}
 
-    a {
-      text-decoration: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
+.cards {
+  display: grid;
+  gap: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
 
-    .admin {
-      color: rgb(0, 0, 0);
-      background: rgb(1000, 1000, 1000);
-      border: 1px solid rgb(0, 0, 0);
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
 
-    .docs {
-      color: rgb(1000, 1000, 1000);
-      background: rgb(0, 0, 0);
-      border: 1px solid rgb(1000, 1000, 1000);
-    }
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    @media (max-width: 1024px) {
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .codeLink {
-      text-decoration: none;
-      padding: 0 0.5rem;
-      background: rgb(60, 60, 60);
-      border-radius: 4px;
-    }
-  }
+.code pre {
+  overflow-x: auto;
+  padding: 1rem;
+  font-size: 0.9rem;
 }

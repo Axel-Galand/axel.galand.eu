@@ -3,12 +3,14 @@ import type { CollectionConfig } from 'payload'
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceDraftForMcp } from '@/hooks/forceDraftForMcp'
 import { slugField } from '@/fields/slug'
+import { previewDocument } from '@/lib/preview'
 
 export const Albums: CollectionConfig = {
   slug: 'albums',
   labels: { singular: 'Album', plural: 'Albums' },
   admin: {
     useAsTitle: 'title',
+    preview: previewDocument('albums'),
     defaultColumns: ['title', 'season', '_status', 'updatedAt'],
     group: 'Perso',
   },
