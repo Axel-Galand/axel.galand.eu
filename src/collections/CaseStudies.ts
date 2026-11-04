@@ -3,6 +3,7 @@ import type { CollectionConfig, Field } from 'payload'
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceDraftForMcp } from '@/hooks/forceDraftForMcp'
 import { slugField } from '@/fields/slug'
+import { previewDocument } from '@/lib/preview'
 
 const monthPicker = {
   date: { pickerAppearance: 'monthOnly' as const, displayFormat: 'MM/yyyy' },
@@ -21,6 +22,7 @@ export const CaseStudies: CollectionConfig = {
   labels: { singular: 'Étude de cas', plural: 'Études de cas' },
   admin: {
     useAsTitle: 'title',
+    preview: previewDocument('case-studies'),
     defaultColumns: ['title', 'sector', 'featured', '_status', 'updatedAt'],
     group: 'Contenu',
   },

@@ -2,11 +2,12 @@ import type { GlobalConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceGlobalDraftForMcp } from '@/hooks/forceDraftForMcp'
+import { previewRoute } from '@/lib/preview'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Réglages du site',
-  admin: { group: 'Réglages' },
+  admin: { group: 'Réglages', preview: previewRoute('/') },
   access: {
     read: publishedOrAuthenticated,
     update: authenticated,

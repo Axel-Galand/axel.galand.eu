@@ -3,3 +3,7 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   workerd: true
+  # Pulled in by next-intl for message extraction, which this site does not use. Their prebuilt
+  # binaries come as optional dependencies; their install scripts are not needed.
+  '@parcel/watcher': false
+  '@swc/core': false

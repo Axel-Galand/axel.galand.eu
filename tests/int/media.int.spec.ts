@@ -6,6 +6,9 @@ import type { Payload } from 'payload'
 import sharp from 'sharp'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { findPublic } from '@/lib/content'
+import type { Media } from '@/payload-types'
+
 import { phonePhoto } from '../helpers/media'
 import { testPayload } from '../helpers/payload'
 
@@ -74,6 +77,60 @@ describe('media uploads', () => {
     )
 
     await expect(upload(svg, 'evil.svg', 'image/svg+xml')).rejects.toThrow()
+  })
+
+  it('describes images in French on English pages until their alt text is translated', async () => {
+    const photo = await upload(await phonePhoto(), 'alt.jpg', 'image/jpeg')
+    await payload.update({
+      collection: 'media',
+      id: photo.id,
+      locale: 'fr',
+      data: { alt: 'Une moto dans la boue', caption: 'Légende FR' },
+    })
+    const slug = `media-alt-${Date.now()}`
+    const study = await payload.create({
+      collection: 'case-studies',
+      locale: 'fr',
+      data: {
+        title: 'Alt FR',
+        slug,
+        summary: 'Résumé',
+        sector: 'Secteur',
+        period: { start: '2024-01-01T00:00:00.000Z' },
+        cover: photo.id,
+        _status: 'published',
+      },
+    })
+    await payload.update({
+      collection: 'case-studies',
+      id: study.id,
+      locale: 'en',
+      data: { title: 'Alt EN', summary: 'Summary', sector: 'Sector', _status: 'published' },
+    })
+
+    const { docs } = await findPublic({
+      collection: 'case-studies',
+      locale: 'en',
+      where: { slug: { equals: slug } },
+      depth: 1,
+      reader: { draft: false },
+    })
+    const cover = docs[0]?.cover as Media
+
+    expect(cover.alt).toBe('Une moto dans la boue')
+    expect(cover.caption).toBe('Légende FR')
+
+    // The admin reads the English field as it is: empty, so saving it never stores French.
+    const inAdmin = await payload.findByID({
+      collection: 'media',
+      id: photo.id,
+      locale: 'en',
+      fallbackLocale: false,
+    })
+
+    expect(inAdmin.alt ?? null).toBeNull()
+
+    await payload.delete({ collection: 'case-studies', id: study.id })
   })
 
   it('rejects a file type outside the list', async () => {

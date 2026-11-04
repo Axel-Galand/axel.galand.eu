@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceDraftForMcp } from '@/hooks/forceDraftForMcp'
+import { previewRoute } from '@/lib/preview'
 
 export const skillCategories = [
   { label: 'Front', value: 'front' },
@@ -19,6 +20,7 @@ export const Skills: CollectionConfig = {
   labels: { singular: 'Compétence', plural: 'Compétences' },
   admin: {
     useAsTitle: 'name',
+    preview: previewRoute('/parcours'),
     defaultColumns: ['name', 'category', 'order'],
     group: 'Parcours',
   },

@@ -1,0 +1,97 @@
+{
+  "site": {
+    "skip": "Aller au contenu",
+    "nav": "Navigation principale",
+    "home": "Accueil",
+    "projects": "Projets",
+    "background": "Parcours",
+    "notes": "Notes",
+    "personal": "Perso",
+    "legal": "Mentions légales",
+    "rss": "Flux RSS des notes",
+    "switchTo": "English",
+    "switchLabel": "Read in English"
+  },
+  "preview": {
+    "banner": "Aperçu : les brouillons sont affichés.",
+    "exit": "Quitter l'aperçu"
+  },
+  "home": {
+    "featured": "Projets mis en avant",
+    "allProjects": "Tous les projets",
+    "latestNotes": "Dernières notes",
+    "allNotes": "Toutes les notes",
+    "links": "Me trouver",
+    "email": "E-mail"
+  },
+  "projects": {
+    "title": "Projets",
+    "description": "Études de cas de projets clients, anonymisées.",
+    "empty": "Aucun projet publié pour l'instant.",
+    "sector": "Secteur",
+    "role": "Rôle",
+    "period": "Période",
+    "present": "aujourd'hui",
+    "stack": "Stack",
+    "metrics": "En chiffres",
+    "context": "Contexte",
+    "challenge": "Enjeu",
+    "work": "Ce que j'ai fait",
+    "result": "Résultat",
+    "learnings": "Ce que j'en retiens",
+    "diagram": "Schéma d'architecture"
+  },
+  "background": {
+    "title": "Parcours",
+    "description": "Expériences, formation et compétences.",
+    "jobs": "Expériences",
+    "education": "Formation",
+    "skills": "Compétences",
+    "languages": "Langues",
+    "certifications": "Certifications",
+    "cv": "Télécharger le CV (PDF)",
+    "related": "Projets liés",
+    "categories": {
+      "front": "Front",
+      "back": "Back",
+      "mobile": "Mobile",
+      "cms": "CMS",
+      "data": "Données",
+      "infra": "Infra et DevOps",
+      "quality": "Qualité et tests",
+      "tooling": "IA et outillage"
+    }
+  },
+  "notes": {
+    "title": "Notes",
+    "description": "Notes techniques.",
+    "empty": "Aucune note publiée pour l'instant.",
+    "published": "Publiée le {date}",
+    "feedTitle": "Notes · Axel Galand",
+    "feedDescription": "Notes techniques d'Axel Galand."
+  },
+  "personal": {
+    "title": "Perso",
+    "description": "Photos de mes saisons d'enduro, et d'ailleurs.",
+    "empty": "Aucun album publié pour l'instant.",
+    "season": "Saison {season}",
+    "photos": "{count, plural, =0 {Aucune photo} one {# photo} other {# photos}}"
+  },
+  "legal": {
+    "title": "Mentions légales"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "Cette page n'existe pas, ou pas dans cette langue.",
+    "back": "Retour à l'accueil"
+  },
+  "cv": {
+    "title": "CV",
+    "jobs": "Expériences",
+    "education": "Formation",
+    "skills": "Compétences",
+    "languages": "Langues",
+    "certifications": "Certifications",
+    "present": "aujourd'hui"
+  }
+}

@@ -58,6 +58,12 @@ jobs:
       - run: pnpm format:check
       - run: pnpm test:int
       - run: pnpm build
+      # The production server routes and caches differently from `next dev`, which e2e runs on.
+      - name: Smoke test the standalone server
+        run: bash tests/smoke/standalone.sh
+      - name: Install the Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
 
   deploy:
     needs: check

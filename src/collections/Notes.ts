@@ -4,6 +4,7 @@ import type { CollectionConfig } from 'payload'
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { forceDraftForMcp } from '@/hooks/forceDraftForMcp'
 import { slugField } from '@/fields/slug'
+import { previewDocument } from '@/lib/preview'
 
 // Keys are what a Markdown fence may say (```ts); short aliases are listed so writing through MCP
 // never fails the block's language validation.
@@ -43,6 +44,7 @@ export const Notes: CollectionConfig = {
   labels: { singular: 'Note technique', plural: 'Notes techniques' },
   admin: {
     useAsTitle: 'title',
+    preview: previewDocument('notes'),
     defaultColumns: ['title', 'publishedAt', '_status', 'updatedAt'],
     group: 'Contenu',
   },

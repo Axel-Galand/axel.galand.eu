@@ -12,5 +12,8 @@ export default defineConfig({
     env: { DATABASE_URL: 'file:./test.db', MEDIA_DIR: './test-media' },
     // Each file boots Payload, which pushes the schema: in parallel they race on the same file.
     fileParallelism: false,
+    // next-intl imports `next/navigation` without an extension, which Node's ESM loader rejects
+    // (next has no exports map): let Vite resolve it.
+    server: { deps: { inline: ['next-intl'] } },
   },
 })
