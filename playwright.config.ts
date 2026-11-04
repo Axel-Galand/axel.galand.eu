@@ -5,8 +5,20 @@ import { defineConfig, devices } from '@playwright/test'
  * https://github.com/motdotla/dotenv
  */
 import 'dotenv/config'
+import fs from 'fs'
 
 import { e2ePort, serverURL } from './tests/helpers/serverURL'
+
+// The e2e run gets its own database and upload folder, so it never touches dev data and never meets
+// a stale schema. They are recreated once per run (workers reload this file, hence the guard).
+const e2eEnv = { DATABASE_URL: 'file:./e2e.db', MEDIA_DIR: './e2e-media', SERVER_URL: serverURL }
+Object.assign(process.env, e2eEnv)
+
+if (!process.env.TEST_WORKER_INDEX) {
+  for (const file of ['e2e.db', 'e2e.db-wal', 'e2e.db-shm', 'e2e-media']) {
+    fs.rmSync(file, { recursive: true, force: true })
+  }
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -38,8 +50,9 @@ export default defineConfig({
   webServer: {
     command: `pnpm dev --port ${e2ePort}`,
     // CSRF and CORS only trust SERVER_URL, so it must match the e2e port.
-    env: { SERVER_URL: serverURL },
+    env: e2eEnv,
     reuseExistingServer: true,
-    url: serverURL,
+    // /healthz boots Payload, so the server pushes the schema before any test touches the database.
+    url: `${serverURL}/healthz`,
   },
 })

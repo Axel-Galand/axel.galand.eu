@@ -48,6 +48,8 @@ CLAUDE.md
 *.db
 *.db-*
 /media
+/test-media
+/e2e-media
 
 # Playwright
 node_modules/
