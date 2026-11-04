@@ -6,21 +6,12 @@ import type { Payload } from 'payload'
 import sharp from 'sharp'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { phonePhoto } from '../helpers/media'
 import { testPayload } from '../helpers/payload'
 
 let payload: Payload
 const mediaDir = path.resolve(process.env.MEDIA_DIR ?? './test-media')
 const created: number[] = []
-
-// A 4000x3000 JPEG carrying GPS coordinates, like a phone photo.
-const phonePhoto = () =>
-  sharp({ create: { width: 4000, height: 3000, channels: 3, background: '#4a7' } })
-    .jpeg()
-    .withExif({
-      IFD0: { Make: 'TestPhone' },
-      IFD3: { GPSLatitudeRef: 'N', GPSLatitude: '44/1 50/1 0/1' },
-    })
-    .toBuffer()
 
 const upload = async (data: Buffer, name: string, mimetype: string) => {
   const doc = await payload.create({
