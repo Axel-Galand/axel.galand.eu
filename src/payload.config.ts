@@ -22,7 +22,7 @@ import { documentPath, homePath, isSectionSlug } from './lib/paths'
 import { getServerURL } from './lib/serverURL'
 import { writeRichTextTool } from './mcp/writeRichText'
 import { migrations } from './migrations'
-import { cloudinaryAdminThumbnail } from './plugins/cloudinaryAdminThumbnail'
+import { cloudinaryStrictURLs } from './plugins/cloudinaryStrictURLs'
 import { undoFailedUploads } from './plugins/undoFailedUploads'
 
 const filename = fileURLToPath(import.meta.url)
@@ -138,6 +138,6 @@ export default buildConfig({
         media: { disablePayloadAccessControl: true },
       },
     }),
-    ...(useCloudinary ? [cloudinaryAdminThumbnail(cloudName), undoFailedUploads()] : []),
+    ...(useCloudinary ? [cloudinaryStrictURLs(cloudName), undoFailedUploads()] : []),
   ],
 })

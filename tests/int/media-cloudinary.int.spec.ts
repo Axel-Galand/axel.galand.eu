@@ -9,7 +9,7 @@ import { Writable } from 'stream'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { phonePhoto } from '../helpers/media'
-import { testPayload } from '../helpers/payload'
+import { paragraph, testPayload } from '../helpers/payload'
 
 // Runs before the imports: the config reads these when it loads. The plugin adds columns, so this
 // file gets its own database. The credentials are fake and never sent: the SDK calls are stubbed.
@@ -68,13 +68,17 @@ const fakeUploadStream = (options: Record<string, unknown>, callback: UploadCall
   })
 }
 
-const upload = async (alt: string) => {
-  const data = await phonePhoto()
+const upload = async (alt: string, file?: { data: Buffer; mimetype: string; name: string }) => {
+  const { data, mimetype, name } = file ?? {
+    data: await phonePhoto(),
+    mimetype: 'image/jpeg',
+    name: 'IMG_1234.jpg',
+  }
 
   return payload.create({
     collection: 'media',
     data: { alt },
-    file: { data, mimetype: 'image/jpeg', name: 'IMG_1234.jpg', size: data.length },
+    file: { data, mimetype, name, size: data.length },
   })
 }
 
@@ -120,8 +124,60 @@ describe('media uploads to Cloudinary', () => {
     const stored = await payload.findByID({ collection: 'media', id: doc.id })
 
     expect(stored.cloudinaryPublicId).toBe(`portfolio/asset${sent.length}`)
-    expect(stored.url).toMatch(/^https:\/\/res\.cloudinary\.com\/test-cloud\//)
     expect(stored.blurDataUrl).toMatch(/^data:image\/webp;base64,/)
+  })
+
+  // Strict transformations refuse a delivery URL without an extension or a named transformation.
+  it('gives URLs that strict transformations serve', async () => {
+    const photo = await upload('cloud urls')
+    const svg = await upload('cloud urls svg', {
+      data: Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10"/></svg>',
+      ),
+      mimetype: 'image/svg+xml',
+      name: 'diagram.svg',
+    })
+    const base = 'https://res.cloudinary.com/test-cloud/image/upload'
+    // Reads rebuild the URL from the public id; the create response keeps Cloudinary's secure_url.
+    const read = (id: number) => payload.findByID({ collection: 'media', id })
+    const listed = await payload.find({ collection: 'media', where: { id: { equals: photo.id } } })
+
+    for (const doc of [await read(photo.id), listed.docs[0]]) {
+      expect(doc?.url).toBe(`${base}/${photo.cloudinaryPublicId}.jpg`)
+      expect(doc?.thumbnailURL).toBe(`${base}/t_pf_w480/${photo.cloudinaryPublicId}`)
+    }
+    expect((await read(svg.id)).url).toBe(`${base}/${svg.cloudinaryPublicId}.svg`)
+
+    // A select or a populated relation without mimeType / cloudinaryPublicId still gets them.
+    const selected = await payload.findByID({
+      collection: 'media',
+      id: photo.id,
+      select: { url: true },
+    })
+
+    expect(selected.url).toBe(`${base}/${photo.cloudinaryPublicId}.jpg`)
+
+    const note = await payload.create({
+      collection: 'notes',
+      data: {
+        title: 'Cloud cover',
+        slug: 'cloud-cover',
+        excerpt: 'Chapô',
+        body: paragraph('Corps'),
+        cover: photo.id,
+      },
+    })
+    const withCover = await payload.findByID({
+      collection: 'notes',
+      id: note.id,
+      depth: 1,
+      populate: { media: { url: true } },
+    })
+
+    expect(typeof withCover.cover === 'object' && withCover.cover?.url).toBe(
+      `${base}/${photo.cloudinaryPublicId}.jpg`,
+    )
+    await payload.delete({ collection: 'notes', id: note.id })
   })
 
   it('leaves no media row behind when the upload fails', async () => {
@@ -147,7 +203,7 @@ describe('media uploads to Cloudinary', () => {
       payload.update({
         collection: 'media',
         id: doc.id,
-        data: {},
+        data: { alt: 'changed with the file' },
         file: { data: other, mimetype: 'image/jpeg', name: 'other.jpg', size: other.length },
       }),
     ).rejects.toThrow('403')
@@ -155,6 +211,7 @@ describe('media uploads to Cloudinary', () => {
     const stored = await payload.findByID({ collection: 'media', id: doc.id })
 
     expect(stored).toMatchObject({
+      alt: 'cloud replace',
       filename: doc.filename,
       filesize: doc.filesize,
       width: doc.width,

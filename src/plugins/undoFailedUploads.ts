@@ -1,4 +1,5 @@
 import type { CollectionAfterChangeHook, CollectionSlug, Plugin } from 'payload'
+import { fieldAffectsData } from 'payload/shared'
 
 /**
  * The Cloudinary upload runs in an afterChange hook, once the row is written. db-sqlite has no
@@ -15,6 +16,19 @@ export const undoFailedUploads =
       if (collection.slug !== collectionSlug) {
         return collection
       }
+
+      // previousDoc holds a single locale, but the adapter only writes localized fields given per
+      // locale. Media has no localized field below the top level.
+      const localized = collection.fields.flatMap((field) =>
+        fieldAffectsData(field) && field.localized ? [field.name] : [],
+      )
+      const asWritten = (doc: Record<string, unknown>, locale?: string) =>
+        locale && locale !== 'all'
+          ? {
+              ...doc,
+              ...Object.fromEntries(localized.map((name) => [name, { [locale]: doc[name] }])),
+            }
+          : doc
 
       const undoOnFailure =
         (hook: CollectionAfterChangeHook): CollectionAfterChangeHook =>
@@ -35,7 +49,7 @@ export const undoFailedUploads =
                 : req.payload.db.updateOne({
                     collection: collectionSlug,
                     id: doc.id,
-                    data: previousDoc,
+                    data: asWritten(previousDoc, req.locale),
                     req,
                   })
 
