@@ -99,11 +99,23 @@ test.describe('MCP endpoint', () => {
     expect(await publicNotes(request)).toBe(0)
   })
 
-  test('refuses the MCP key used as a REST API key', async ({ request }) => {
-    const response = await request.post(`${serverURL}/api/notes`, {
-      headers: { Authorization: `payload-mcp-api-keys API-Key ${key}` },
+  test('refuses the MCP key used as a REST API key, before Payload sees it', async ({
+    request,
+  }) => {
+    const headers = { Authorization: `payload-mcp-api-keys API-Key ${key}` }
+    const write = await request.post(`${serverURL}/api/notes`, {
+      headers,
       data: { title: 'x', excerpt: 'x', body: paragraph('x') },
     })
+    // An anonymous call would get a 403 here too; /me tells the key apart from anonymous.
+    const me = await request.get(`${serverURL}/api/payload-mcp-api-keys/me`, { headers })
+
+    expect(write.status()).toBe(401)
+    expect(me.status()).toBe(401)
+  })
+
+  test('does not let anonymous visitors list media', async ({ request }) => {
+    const response = await request.get(`${serverURL}/api/media`)
 
     expect(response.status()).toBe(403)
   })

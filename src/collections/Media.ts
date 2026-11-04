@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, authenticated } from '@/access'
+import { authenticated, isAdminUser } from '@/access'
 import { setBlurDataURL } from '@/hooks/setBlurDataURL'
 
 export const Media: CollectionConfig = {
@@ -11,7 +11,10 @@ export const Media: CollectionConfig = {
     defaultColumns: ['filename', 'alt', 'updatedAt'],
   },
   access: {
-    read: anyone,
+    // The files are public, the list is not: an anonymous REST call must not enumerate uploads that
+    // only drafts use. Public pages populate media through the Local API; admin and MCP are users.
+    read: ({ req, isReadingStaticFile }) =>
+      isAdminUser(req.user) || req.payloadAPI === 'local' || Boolean(isReadingStaticFile),
     create: authenticated,
     update: authenticated,
     delete: authenticated,

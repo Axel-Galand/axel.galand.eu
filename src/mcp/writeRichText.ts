@@ -2,6 +2,8 @@ import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richt
 import type { PayloadRequest, RichTextField } from 'payload'
 import { z } from 'zod'
 
+import { codeLanguages } from '@/collections/Notes'
+
 // Rich text fields Claude may write, per target. Anything else is refused.
 const collectionTargets = {
   'case-studies': ['context', 'challenge', 'work', 'result', 'learnings'],
@@ -41,16 +43,37 @@ const findRichTextField = (fields: { name?: string; type: string }[], name: stri
   return field as RichTextField
 }
 
+type LexicalNode = { type?: string; fields?: Record<string, unknown>; children?: LexicalNode[] }
+
+// A fence in a language the Code block does not list (```go) would save as a draft, then fail
+// validation on publish. Such blocks fall back to plain text.
+const normalizeCodeLanguages = (node: LexicalNode) => {
+  if (node.type === 'block' && node.fields?.blockType === 'Code') {
+    const language = node.fields.language
+
+    if (typeof language !== 'string' || !(language in codeLanguages)) {
+      node.fields.language = 'plaintext'
+    }
+  }
+
+  node.children?.forEach(normalizeCodeLanguages)
+}
+
 /** Markdown → Lexical with the field's own editor config (so its blocks, like Code, are known). */
 export const richTextFromMarkdown = (
   fields: { name?: string; type: string }[],
   name: string,
   markdown: string,
-) =>
-  convertMarkdownToLexical({
+) => {
+  const state = convertMarkdownToLexical({
     editorConfig: editorConfigFactory.fromField({ field: findRichTextField(fields, name) }),
     markdown,
   })
+
+  normalizeCodeLanguages(state.root as LexicalNode)
+
+  return state
+}
 
 /**
  * Lexical's JSON is too verbose to write reliably by hand, so Claude sends Markdown and the server
@@ -60,7 +83,7 @@ export const richTextFromMarkdown = (
 export const writeRichTextTool = {
   name: 'writeRichText',
   description:
-    'Write one rich text field of a case study, a note or the profile from Markdown. The server converts it to Lexical and saves a draft; publishing stays manual in the admin.',
+    'Write one rich text field of a case study, a note or the profile from Markdown. The server converts it to Lexical and saves a draft; publishing stays manual in the admin. This tool has its own toggle on the API key: the per-collection toggles do not apply to it.',
   parameters,
   handler: async (rawArgs: Record<string, unknown>, req: PayloadRequest) => {
     const { target, id, field, locale, markdown } = z.object(parameters).parse(rawArgs)

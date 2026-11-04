@@ -10,6 +10,7 @@ export const SiteSettings: GlobalConfig = {
   access: {
     read: publishedOrAuthenticated,
     update: authenticated,
+    readVersions: authenticated,
   },
   hooks: {
     beforeOperation: [forceGlobalDraftForMcp],

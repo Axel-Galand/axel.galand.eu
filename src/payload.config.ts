@@ -127,6 +127,8 @@ export default buildConfig({
         apiSecret: process.env.CLOUDINARY_API_SECRET ?? '',
       },
       folder: process.env.CLOUDINARY_FOLDER || 'portfolio',
+      // Random public ids: no original filename in public URLs, and no photo.jpg / photo.png collision.
+      useFilename: false,
       collections: {
         // Direct res.cloudinary.com URLs: otherwise every file would be proxied through the VPS.
         media: { disablePayloadAccessControl: true },

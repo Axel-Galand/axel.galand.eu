@@ -9,6 +9,7 @@ import { apiKeyDocUser, createAdmin, testPayload } from '../helpers/payload'
 let payload: Payload
 let admin: User
 const marker = `access-${Date.now()}`
+const createdIds: number[] = []
 
 const caseStudy = (title: string) => ({
   title,
@@ -26,6 +27,7 @@ describe('content access', () => {
 
   afterAll(async () => {
     await payload.delete({ collection: 'case-studies', where: { slug: { like: marker } } })
+    await payload.delete({ collection: 'case-studies', where: { id: { in: createdIds } } })
     await payload.delete({ collection: 'users', where: { id: { equals: admin.id } } })
   })
 
@@ -155,5 +157,64 @@ describe('content access', () => {
 
     expect(settings.defaultTitle).toBe('Publié')
     expect(anonymousDraft.defaultTitle).toBe('Publié')
+  })
+
+  it('only derives the slug from a French title', async () => {
+    const doc = await payload.create({
+      collection: 'case-studies',
+      data: { ...caseStudy('x'), slug: undefined, title: `${marker} English first` },
+      locale: 'en',
+      draft: true,
+    })
+    createdIds.push(doc.id)
+
+    expect(doc.slug ?? null).toBeNull()
+  })
+
+  it('never stores an empty slug, and refuses to publish without one', async () => {
+    const draft = await payload.create({
+      collection: 'case-studies',
+      data: { ...caseStudy('x'), slug: undefined, title: '!!!' },
+      draft: true,
+    })
+    createdIds.push(draft.id)
+
+    expect(draft.slug ?? null).toBeNull()
+    await expect(
+      payload.create({
+        collection: 'case-studies',
+        data: { ...caseStudy('x'), slug: '', title: '???', _status: 'published' },
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('lists media for the Local API but not for an anonymous REST call', async () => {
+    await expect(
+      payload.find({ collection: 'media', overrideAccess: false, limit: 1 }),
+    ).resolves.toBeDefined()
+
+    await expect(
+      payload.find({
+        collection: 'media',
+        overrideAccess: false,
+        req: { payloadAPI: 'REST' },
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('keeps versions (drafts) away from anyone but an admin', async () => {
+    await expect(
+      payload.findVersions({ collection: 'case-studies', overrideAccess: false }),
+    ).rejects.toThrow()
+    await expect(
+      payload.findVersions({
+        collection: 'case-studies',
+        overrideAccess: false,
+        user: apiKeyDocUser(admin.id),
+      }),
+    ).rejects.toThrow()
+    await expect(
+      payload.findVersions({ collection: 'case-studies', overrideAccess: false, user: admin }),
+    ).resolves.toBeDefined()
   })
 })

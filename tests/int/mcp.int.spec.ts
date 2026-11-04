@@ -133,6 +133,31 @@ describe('writes through MCP', () => {
       expect(saved._status).toBe('draft')
     })
 
+    it('falls back to plain text for an unknown fence language, so the note still publishes', async () => {
+      const doc = await payload.create({ collection: 'notes', data: note('Go fence'), draft: true })
+
+      await writeRichTextTool.handler(
+        {
+          target: 'notes',
+          id: doc.id,
+          field: 'body',
+          locale: 'fr',
+          markdown: '```go\nfmt.Println(1)\n```\n',
+        },
+        req,
+      )
+
+      const saved = await payload.findByID({ collection: 'notes', id: doc.id, draft: true })
+      const block = (saved.body.root.children as Array<Record<string, unknown>>).find(
+        (node) => node.type === 'block',
+      ) as { fields: { language: string } } | undefined
+
+      expect(block?.fields.language).toBe('plaintext')
+      await expect(
+        payload.update({ collection: 'notes', id: doc.id, data: { _status: 'published' } }),
+      ).resolves.toMatchObject({ _status: 'published' })
+    })
+
     it('refuses a field that is not on its list', async () => {
       const doc = await payload.create({
         collection: 'notes',

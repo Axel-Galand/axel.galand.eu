@@ -186,12 +186,14 @@ export interface User {
  */
 export interface Media {
   id: number;
+  cloudinaryPublicId?: string | null;
   /**
    * Décrit l’image pour les lecteurs d’écran et le SEO.
    */
   alt: string;
   caption?: string | null;
   blurDataUrl?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -331,9 +333,9 @@ export interface CaseStudy {
     [k: string]: unknown;
   } | null;
   /**
-   * Laisser vide pour le générer depuis le titre.
+   * Laisser vide pour le générer depuis le titre français.
    */
-  slug?: string | null;
+  slug: string;
   featured?: boolean | null;
   order?: number | null;
   meta?: {
@@ -389,9 +391,9 @@ export interface Note {
     [k: string]: unknown;
   };
   /**
-   * Laisser vide pour le générer depuis le titre.
+   * Laisser vide pour le générer depuis le titre français.
    */
-  slug?: string | null;
+  slug: string;
   publishedAt?: string | null;
   tags?: string[] | null;
   meta?: {
@@ -424,9 +426,9 @@ export interface Album {
    */
   photos?: (number | Media)[] | null;
   /**
-   * Laisser vide pour le générer depuis le titre.
+   * Laisser vide pour le générer depuis le titre français.
    */
-  slug?: string | null;
+  slug: string;
   /**
    * Départage deux albums de la même saison.
    */
@@ -592,7 +594,7 @@ export interface PayloadMcpApiKey {
   };
   'payload-mcp-tool'?: {
     /**
-     * Write one rich text field of a case study, a note or the profile from Markdown. The server converts it to Lexical and saves a draft; publishing stays manual in the admin.
+     * Write one rich text field of a case study, a note or the profile from Markdown. The server converts it to Lexical and saves a draft; publishing stays manual in the admin. This tool has its own toggle on the API key: the per-collection toggles do not apply to it.
      */
     writeRichText?: boolean | null;
   };
@@ -740,9 +742,11 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  cloudinaryPublicId?: T;
   alt?: T;
   caption?: T;
   blurDataUrl?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

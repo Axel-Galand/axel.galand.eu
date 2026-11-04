@@ -10,6 +10,7 @@ export const Profile: GlobalConfig = {
   access: {
     read: publishedOrAuthenticated,
     update: authenticated,
+    readVersions: authenticated,
   },
   hooks: {
     beforeOperation: [forceGlobalDraftForMcp],

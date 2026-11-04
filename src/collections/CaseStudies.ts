@@ -30,6 +30,7 @@ export const CaseStudies: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+    readVersions: authenticated,
   },
   hooks: {
     beforeOperation: [forceDraftForMcp],

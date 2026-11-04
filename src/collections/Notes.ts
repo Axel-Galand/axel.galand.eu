@@ -7,7 +7,7 @@ import { slugField } from '@/fields/slug'
 
 // Keys are what a Markdown fence may say (```ts); short aliases are listed so writing through MCP
 // never fails the block's language validation.
-const codeLanguages: Record<string, string> = {
+export const codeLanguages: Record<string, string> = {
   plaintext: 'Texte',
   typescript: 'TypeScript',
   ts: 'TypeScript',
@@ -52,6 +52,7 @@ export const Notes: CollectionConfig = {
     create: authenticated,
     update: authenticated,
     delete: authenticated,
+    readVersions: authenticated,
   },
   hooks: {
     beforeOperation: [forceDraftForMcp],

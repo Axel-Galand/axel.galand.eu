@@ -1291,7 +1291,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(
     sql`CREATE INDEX \`payload_preferences_rels_users_id_idx\` ON \`payload_preferences_rels\` (\`users_id\`);`,
   )
-  await db.run(sql`ALTER TABLE \`media\` ADD \`alt\` text NOT NULL;`)
+  await db.run(sql`ALTER TABLE \`media\` ADD \`alt\` text NOT NULL DEFAULT '';`)
   await db.run(sql`ALTER TABLE \`media\` DROP COLUMN \`cloudinary_public_id\`;`)
   await db.run(sql`ALTER TABLE \`media\` DROP COLUMN \`blur_data_url\`;`)
   await db.run(sql`ALTER TABLE \`media\` DROP COLUMN \`_objectkey\`;`)
