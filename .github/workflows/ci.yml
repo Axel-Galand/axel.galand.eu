@@ -51,6 +51,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint --max-warnings=0
+      # Types are no longer generated on boot: fail when a schema change was committed without them.
+      - name: Check the generated types are up to date
+        run: pnpm generate:types && git diff --exit-code src/payload-types.ts
       - run: pnpm typecheck
       - run: pnpm format:check
       - run: pnpm test:int

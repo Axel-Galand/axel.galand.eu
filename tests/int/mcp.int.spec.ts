@@ -174,6 +174,19 @@ describe('writes through MCP', () => {
     })
 
     it('writes the profile bio as a draft', async () => {
+      // A publish builds on the latest draft, so set the live bio here: a previous run's draft bio
+      // would otherwise get published by the global test above.
+      await payload.updateGlobal({
+        slug: 'profile',
+        locale: 'en',
+        data: {
+          name: 'Axel Galand',
+          headline: 'Published headline',
+          bio: paragraph('Published bio.'),
+          _status: 'published',
+        },
+      })
+
       await writeRichTextTool.handler(
         { target: 'profile', field: 'bio', locale: 'en', markdown: 'Hello **there**.' },
         req,
@@ -183,7 +196,8 @@ describe('writes through MCP', () => {
       const published = await payload.findGlobal({ slug: 'profile', draft: false, locale: 'en' })
 
       expect(JSON.stringify(draft.bio)).toContain('there')
-      expect(JSON.stringify(published.bio ?? null)).not.toContain('there')
+      expect(JSON.stringify(published.bio)).toContain('Published bio.')
+      expect(JSON.stringify(published.bio)).not.toContain('there')
     })
   })
 })

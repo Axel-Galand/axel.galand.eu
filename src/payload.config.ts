@@ -23,6 +23,7 @@ import { getServerURL } from './lib/serverURL'
 import { writeRichTextTool } from './mcp/writeRichText'
 import { migrations } from './migrations'
 import { cloudinaryAdminThumbnail } from './plugins/cloudinaryAdminThumbnail'
+import { undoFailedUploads } from './plugins/undoFailedUploads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,6 +70,9 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+    // Dev and tests boot without Cloudinary, so generating on boot would drop the plugin's fields.
+    // `pnpm generate:types` enables it.
+    autoGenerate: false,
   },
   db: sqliteAdapter({
     client: {
@@ -134,6 +138,6 @@ export default buildConfig({
         media: { disablePayloadAccessControl: true },
       },
     }),
-    ...(useCloudinary ? [cloudinaryAdminThumbnail(cloudName)] : []),
+    ...(useCloudinary ? [cloudinaryAdminThumbnail(cloudName), undoFailedUploads()] : []),
   ],
 })
