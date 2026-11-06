@@ -126,11 +126,11 @@ const seed = async () => {
       summary: 'A fictional case study for developing the site.',
       sector: 'Rental (example)',
       role: 'Full-stack developer',
-      // Publishing a locale validates its required fields, array rows included.
-      metrics: (live.metrics ?? []).map((metric, index) => ({
-        ...metric,
-        label: ['countries', 'languages'][index] ?? metric.label,
-      })),
+      // Each language has its own rows (localized array).
+      metrics: [
+        { value: '5', label: 'countries' },
+        { value: '9', label: 'languages' },
+      ],
     },
   })
 

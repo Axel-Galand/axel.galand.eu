@@ -78,8 +78,11 @@ export const Experiences: CollectionConfig = {
     {
       name: 'highlights',
       type: 'array',
+      // One list per language: the MCP writes a language at a time and sends rows without ids, so
+      // rows shared by both languages would lose the other language's texts.
+      localized: true,
       label: 'Points clés',
-      fields: [{ name: 'text', type: 'text', required: true, localized: true, label: 'Texte' }],
+      fields: [{ name: 'text', type: 'text', required: true, label: 'Texte' }],
     },
     {
       name: 'caseStudies',

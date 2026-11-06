@@ -5,9 +5,33 @@ import {
   type PayloadRequest,
 } from 'payload'
 
-const stripStatus = (data: unknown) => {
-  if (data && typeof data === 'object') {
-    delete (data as Record<string, unknown>)._status
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+/**
+ * Array rows get new ids. Each row has one primary key across languages, and the localized arrays
+ * keep a list per language: English rows sent with the French row ids (copied from a `find`) would
+ * make the next publish fail and empty the array. Rich text (`root`) is left alone.
+ */
+const stripRowIds = (data: Record<string, unknown>) => {
+  for (const value of Object.values(data)) {
+    if (Array.isArray(value)) {
+      for (const row of value) {
+        if (isPlainObject(row)) {
+          delete row.id
+          stripRowIds(row)
+        }
+      }
+    } else if (isPlainObject(value) && !('root' in value)) {
+      stripRowIds(value)
+    }
+  }
+}
+
+const prepareData = (data: unknown) => {
+  if (isPlainObject(data)) {
+    delete data._status
+    stripRowIds(data)
   }
 }
 
@@ -28,7 +52,7 @@ export const forceDraftForMcp: CollectionBeforeOperationHook = ({ args, operatio
   }
 
   if (operation === 'create' || operation === 'update') {
-    stripStatus(args.data)
+    prepareData(args.data)
 
     return { ...args, draft: true }
   }
@@ -38,7 +62,7 @@ export const forceDraftForMcp: CollectionBeforeOperationHook = ({ args, operatio
 
 export const forceGlobalDraftForMcp: GlobalBeforeOperationHook = ({ args, operation, req }) => {
   if (isMcp(req) && operation === 'update') {
-    stripStatus(args.data)
+    prepareData(args.data)
 
     return { ...args, draft: true }
   }

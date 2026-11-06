@@ -49,6 +49,8 @@ export const Profile: GlobalConfig = {
     {
       name: 'links',
       type: 'array',
+      // Shared by both languages, with nothing localized inside: a URL does not change with the
+      // language, and "LinkedIn" or "GitHub" need no translation.
       label: 'Liens',
       fields: [
         {
@@ -65,7 +67,7 @@ export const Profile: GlobalConfig = {
                 { label: 'Autre', value: 'other' },
               ],
             },
-            { name: 'label', type: 'text', localized: true, label: 'Libellé' },
+            { name: 'label', type: 'text', label: 'Libellé' },
             { name: 'url', type: 'text', required: true, label: 'URL' },
           ],
         },
@@ -74,13 +76,16 @@ export const Profile: GlobalConfig = {
     {
       name: 'languages',
       type: 'array',
+      // One list per language: the MCP writes a language at a time and sends rows without ids, so
+      // rows shared by both languages would lose the other language's texts.
+      localized: true,
       label: 'Langues',
       fields: [
         {
           type: 'row',
           fields: [
-            { name: 'language', type: 'text', required: true, localized: true, label: 'Langue' },
-            { name: 'level', type: 'text', required: true, localized: true, label: 'Niveau' },
+            { name: 'language', type: 'text', required: true, label: 'Langue' },
+            { name: 'level', type: 'text', required: true, label: 'Niveau' },
           ],
         },
       ],
