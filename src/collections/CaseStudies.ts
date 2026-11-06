@@ -96,6 +96,8 @@ export const CaseStudies: CollectionConfig = {
     {
       name: 'metrics',
       type: 'array',
+      // One list per language (see Experiences.highlights).
+      localized: true,
       label: 'Chiffres clés',
       admin: { description: 'Des ordres de grandeur, jamais un chiffre qui identifie le client.' },
       fields: [
@@ -103,7 +105,7 @@ export const CaseStudies: CollectionConfig = {
           type: 'row',
           fields: [
             { name: 'value', type: 'text', required: true, label: 'Valeur' },
-            { name: 'label', type: 'text', required: true, localized: true, label: 'Libellé' },
+            { name: 'label', type: 'text', required: true, label: 'Libellé' },
           ],
         },
       ],
