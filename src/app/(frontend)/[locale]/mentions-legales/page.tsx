@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 
-import { LanguageSwitch } from '@/components/LanguageSwitch'
+import { PageShell } from '@/components/site/PageShell'
 import type { Locale } from '@/i18n/locales'
 import { findPublicGlobal } from '@/lib/content'
 import { localizedPath } from '@/lib/paths'
@@ -37,8 +37,7 @@ export default async function LegalNoticePage() {
   const email = profile.email ? <a href={`mailto:${profile.email}`}>{profile.email}</a> : null
 
   return (
-    <>
-      <LanguageSwitch locale={locale} paths={paths} />
+    <PageShell locale={locale} paths={paths} legacy>
       <h1>{t('title')}</h1>
       {locale === 'fr' ? (
         <>
@@ -90,6 +89,6 @@ export default async function LegalNoticePage() {
           </p>
         </>
       )}
-    </>
+    </PageShell>
   )
 }

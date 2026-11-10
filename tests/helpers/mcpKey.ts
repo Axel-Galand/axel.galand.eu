@@ -23,6 +23,7 @@ export const createMcpKey = async (payload: Payload, user: User, label: string) 
       albums: contentRights,
       experiences: contentRights,
       skills: contentRights,
+      expertises: contentRights,
       media: { find: true },
       profile: { find: true, update: true },
       siteSettings: { find: true, update: true },

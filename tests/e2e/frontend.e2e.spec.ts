@@ -6,8 +6,8 @@ test.describe('Frontend', () => {
   test('can go on homepage', async ({ page }) => {
     await page.goto(baseURL)
 
-    // Other specs may publish a profile meanwhile: only the name is stable.
-    await expect(page.locator('h1').first()).toContainText('Axel Galand')
+    // Other specs may publish a profile meanwhile: only the first name is stable.
+    await expect(page.locator('h1').first()).toContainText('Axel')
   })
 
   test('stays noindex while SITE_INDEXABLE is not "true"', async ({ page }) => {

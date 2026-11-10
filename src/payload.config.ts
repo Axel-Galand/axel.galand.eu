@@ -12,6 +12,7 @@ import sharp from 'sharp'
 import { Albums } from './collections/Albums'
 import { CaseStudies } from './collections/CaseStudies'
 import { Experiences } from './collections/Experiences'
+import { Expertises } from './collections/Expertises'
 import { Media } from './collections/Media'
 import { Notes } from './collections/Notes'
 import { Skills } from './collections/Skills'
@@ -65,7 +66,7 @@ export default buildConfig({
     defaultLocale: 'fr',
     fallback: true,
   },
-  collections: [Users, Media, CaseStudies, Notes, Albums, Experiences, Skills],
+  collections: [Users, Media, CaseStudies, Notes, Albums, Experiences, Skills, Expertises],
   globals: [Profile, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -115,6 +116,11 @@ export default buildConfig({
         albums: { enabled: mcpContent, description: 'Personal photo albums (enduro seasons…).' },
         experiences: { enabled: mcpContent, description: 'Jobs and education for the resume.' },
         skills: { enabled: mcpContent, description: 'Skills, grouped by category.' },
+        expertises: {
+          enabled: mcpContent,
+          description:
+            'The few technologies put forward on the background page, with what I do with them.',
+        },
         media: { enabled: { find: true }, description: 'Uploaded images (read only).' },
       },
       globals: {
@@ -146,7 +152,15 @@ export default buildConfig({
     ...(useCloudinary ? [cloudinaryStrictURLs(cloudName), undoFailedUploads()] : []),
     // Everything the public pages show, media included (alt texts, captions).
     revalidateSiteOn({
-      collections: ['case-studies', 'notes', 'albums', 'experiences', 'skills', 'media'],
+      collections: [
+        'case-studies',
+        'notes',
+        'albums',
+        'experiences',
+        'skills',
+        'expertises',
+        'media',
+      ],
       globals: ['profile', 'site-settings'],
     }),
   ],

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { cache } from 'react'
 
 import { JsonLd } from '@/components/JsonLd'
-import { LanguageSwitch } from '@/components/LanguageSwitch'
+import { PageShell } from '@/components/site/PageShell'
 import { Picture } from '@/components/Picture'
 import { RichText } from '@/components/RichText'
 import type { Locale } from '@/i18n/locales'
@@ -56,41 +56,42 @@ export default async function NotePage({ params }: Props) {
   const paths = await documentPaths('notes', slug)
 
   return (
-    <article>
-      <LanguageSwitch locale={locale} paths={paths} />
-      <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: note.title,
-          description: note.excerpt,
-          inLanguage: locale,
-          url: absoluteURL(paths[locale] ?? ''),
-          datePublished: note.publishedAt ?? note.createdAt,
-          dateModified: note.updatedAt,
-          author: { '@id': absoluteURL('/#person') },
-          keywords: note.tags ?? undefined,
-          image: ogImage(note.cover)?.url,
-        }}
-      />
-      <JsonLd
-        data={breadcrumbs([
-          { name: tSite('home'), path: localizedPath('/', locale) },
-          { name: t('title'), path: localizedPath('/notes', locale) },
-          { name: note.title, path: paths[locale] ?? '' },
-        ])}
-      />
-      <h1>{note.title}</h1>
-      {note.publishedAt ? (
-        <p className="muted">
-          <time dateTime={note.publishedAt}>
-            {t('published', { date: formatDate(note.publishedAt, locale) })}
-          </time>
-        </p>
-      ) : null}
-      <Picture media={note.cover} sizes="(min-width: 48rem) 48rem, 100vw" eager />
-      <RichText data={note.body} locale={locale} />
-      {note.tags?.length ? <p className="muted">{note.tags.join(' · ')}</p> : null}
-    </article>
+    <PageShell locale={locale} paths={paths} current="notes" legacy>
+      <article>
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: note.title,
+            description: note.excerpt,
+            inLanguage: locale,
+            url: absoluteURL(paths[locale] ?? ''),
+            datePublished: note.publishedAt ?? note.createdAt,
+            dateModified: note.updatedAt,
+            author: { '@id': absoluteURL('/#person') },
+            keywords: note.tags ?? undefined,
+            image: ogImage(note.cover)?.url,
+          }}
+        />
+        <JsonLd
+          data={breadcrumbs([
+            { name: tSite('home'), path: localizedPath('/', locale) },
+            { name: t('title'), path: localizedPath('/notes', locale) },
+            { name: note.title, path: paths[locale] ?? '' },
+          ])}
+        />
+        <h1>{note.title}</h1>
+        {note.publishedAt ? (
+          <p className="muted">
+            <time dateTime={note.publishedAt}>
+              {t('published', { date: formatDate(note.publishedAt, locale) })}
+            </time>
+          </p>
+        ) : null}
+        <Picture media={note.cover} sizes="(min-width: 48rem) 48rem, 100vw" eager />
+        <RichText data={note.body} locale={locale} />
+        {note.tags?.length ? <p className="muted">{note.tags.join(' · ')}</p> : null}
+      </article>
+    </PageShell>
   )
 }

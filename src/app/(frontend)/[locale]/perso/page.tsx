@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
-import { LanguageSwitch } from '@/components/LanguageSwitch'
+import { PageShell } from '@/components/site/PageShell'
 import { Picture } from '@/components/Picture'
 import type { Locale } from '@/i18n/locales'
 import { findPublic } from '@/lib/content'
@@ -30,8 +30,7 @@ export default async function PersonalPage() {
   })
 
   return (
-    <>
-      <LanguageSwitch locale={locale} paths={paths} />
+    <PageShell locale={locale} paths={paths} current="personal" legacy>
       <h1>{t('title')}</h1>
       <p className="lead">{t('description')}</p>
       {docs.length ? (
@@ -52,6 +51,6 @@ export default async function PersonalPage() {
       ) : (
         <p>{t('empty')}</p>
       )}
-    </>
+    </PageShell>
   )
 }

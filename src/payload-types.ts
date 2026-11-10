@@ -75,6 +75,7 @@ export interface Config {
     albums: Album;
     experiences: Experience;
     skills: Skill;
+    expertises: Expertise;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -90,6 +91,7 @@ export interface Config {
     albums: AlbumsSelect<false> | AlbumsSelect<true>;
     experiences: ExperiencesSelect<false> | ExperiencesSelect<true>;
     skills: SkillsSelect<false> | SkillsSelect<true>;
+    expertises: ExpertisesSelect<false> | ExpertisesSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -240,6 +242,16 @@ export interface CaseStudy {
         id?: string | null;
       }[]
     | null;
+  kind?: ('client' | 'personal') | null;
+  status?: ('live' | 'testing') | null;
+  team?: string | null;
+  /**
+   * Ce que montrent la carte et la fiche du projet : l'image de couverture, ou une illustration dessinée dans le site.
+   */
+  visual?: ('cover' | 'web-vitals' | 'booking' | 'trading' | 'publishing' | 'topo' | 'none') | null;
+  /**
+   * Montrée sur la carte et la fiche quand le visuel est « Image de couverture ». Sert aussi d’image de partage, faute d’image SEO.
+   */
   cover?: (number | null) | Media;
   diagram?: (number | null) | Media;
   /**
@@ -396,6 +408,10 @@ export interface Note {
   slug: string;
   publishedAt?: string | null;
   tags?: string[] | null;
+  /**
+   * Ouvre la liste des notes et la section Notes de l'accueil.
+   */
+  featured?: boolean | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -419,6 +435,8 @@ export interface Album {
    * Année, par exemple 2026.
    */
   season: number;
+  category?: ('enduro' | 'road') | null;
+  place?: string | null;
   description?: string | null;
   cover: number | Media;
   /**
@@ -471,6 +489,29 @@ export interface Experience {
   /**
    * Départage deux entrées à la même date.
    */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises".
+ */
+export interface Expertise {
+  id: number;
+  name: string;
+  /**
+   * Par exemple « 16 ». Vide si sans objet.
+   */
+  version?: string | null;
+  category: 'front' | 'back' | 'mobile' | 'cms' | 'data' | 'infra' | 'quality' | 'tooling';
+  /**
+   * Une ou deux phrases. Sans texte anglais, l’expertise est absente de /en.
+   */
+  description: string;
+  caseStudies?: (number | CaseStudy)[] | null;
+  notes?: (number | Note)[] | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -566,6 +607,20 @@ export interface PayloadMcpApiKey {
      */
     update?: boolean | null;
   };
+  expertises?: {
+    /**
+     * Allow clients to find expertises.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create expertises.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update expertises.
+     */
+    update?: boolean | null;
+  };
   media?: {
     /**
      * Allow clients to find media.
@@ -657,6 +712,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'skills';
         value: number | Skill;
+      } | null)
+    | ({
+        relationTo: 'expertises';
+        value: number | Expertise;
       } | null)
     | ({
         relationTo: 'payload-mcp-api-keys';
@@ -782,6 +841,10 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         label?: T;
         id?: T;
       };
+  kind?: T;
+  status?: T;
+  team?: T;
+  visual?: T;
   cover?: T;
   diagram?: T;
   context?: T;
@@ -815,6 +878,7 @@ export interface NotesSelect<T extends boolean = true> {
   slug?: T;
   publishedAt?: T;
   tags?: T;
+  featured?: T;
   meta?:
     | T
     | {
@@ -833,6 +897,8 @@ export interface NotesSelect<T extends boolean = true> {
 export interface AlbumsSelect<T extends boolean = true> {
   title?: T;
   season?: T;
+  category?: T;
+  place?: T;
   description?: T;
   cover?: T;
   photos?: T;
@@ -887,6 +953,22 @@ export interface SkillsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expertises_select".
+ */
+export interface ExpertisesSelect<T extends boolean = true> {
+  name?: T;
+  version?: T;
+  category?: T;
+  description?: T;
+  caseStudies?: T;
+  notes?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-mcp-api-keys_select".
  */
 export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
@@ -922,6 +1004,13 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         update?: T;
       };
   skills?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+      };
+  expertises?:
     | T
     | {
         find?: T;

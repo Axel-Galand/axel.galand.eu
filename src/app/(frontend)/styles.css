@@ -1,123 +1,378 @@
-/* Deliberately bare until the design step: readable defaults, light and dark. */
+@import 'tailwindcss';
+
+/*
+ * Design « Signal B2 » (canvas of 2026-11-10). Three colors carry the three sides of the site:
+ * citron for code, blue for the road, orange for enduro. Each has a bright fill for solid blocks and,
+ * on the light theme, a darker shade for text so that it keeps a 4.5:1 contrast.
+ *
+ * The theme is `data-theme` on <html>, set before the first paint by the script in the layout.
+ * Without JavaScript it follows the system.
+ */
+
 :root {
+  /* Each token is light-dark(light, dark): color-scheme picks the side. */
   color-scheme: light dark;
-  --text: #1b1b1f;
-  --muted: #5d5d66;
-  --bg: #ffffff;
-  --line: #e2e2e6;
-  --accent: #5b3fd6;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
-  line-height: 1.6;
+  --bg: light-dark(#f4f5f7, #0a0c10);
+  --surface: light-dark(#ffffff, #12151c);
+  --inset: light-dark(#eef0f4, #0e1117);
+  --bar: light-dark(#e9ecf1, #151923);
+  --line: light-dark(#dadee6, #232836);
+  --line-strong: light-dark(#b4bbc8, #343b4d);
+  --ink: light-dark(#0e1116, #e8eaf0);
+  --ink-strong: light-dark(#000000, #ffffff);
+  --ink-2: light-dark(#3a4252, #c3c9d6);
+  --muted: light-dark(#586174, #a3abbd);
+  --faint: light-dark(#5f687a, #8a93a8);
+  --ghost: light-dark(#9aa2b1, #4a5269);
+  --dot: light-dark(#d3d8e1, #1e2433);
+  --tread: light-dark(#dce0e8, #1c2130);
+  --veil: light-dark(rgb(255 255 255 / 0.84), rgb(10 12 16 / 0.72));
+  --on-fill: #0a0c10;
+  --road: light-dark(#e4ecf7, #0c1220);
+  --asphalt: light-dark(#c3cedf, #1b2336);
+  --topo: light-dark(#fbece1, #17100a);
+  --code-fill: #c8ff3e;
+  --route-fill: #59c8ff;
+  --enduro-fill: #ff7a2f;
+  --code: light-dark(#3f6b00, #c8ff3e);
+  --route: light-dark(#0a5fb8, #59c8ff);
+  --enduro: light-dark(#a33a08, #ff7a2f);
+  --violet: light-dark(#5b3fc4, #b69cff);
+  --rose: light-dark(#b4236b, #ff7ab8);
+  --btn: light-dark(#0e1116, #c8ff3e);
+  --btn-ink: light-dark(#ffffff, #0a0c10);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Safari before 17.5 has no light-dark(): it gets the light theme. */
+@supports not (color: light-dark(#000, #fff)) {
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --inset: #eef0f4;
+    --bar: #e9ecf1;
+    --line: #dadee6;
+    --line-strong: #b4bbc8;
+    --ink: #0e1116;
+    --ink-strong: #000000;
+    --ink-2: #3a4252;
+    --muted: #586174;
+    --faint: #5f687a;
+    --ghost: #9aa2b1;
+    --dot: #d3d8e1;
+    --tread: #dce0e8;
+    --veil: rgb(255 255 255 / 0.84);
+    --road: #e4ecf7;
+    --asphalt: #c3cedf;
+    --topo: #fbece1;
+    --code: #3f6b00;
+    --route: #0a5fb8;
+    --enduro: #a33a08;
+    --violet: #5b3fc4;
+    --rose: #b4236b;
+    --btn: #0e1116;
+    --btn-ink: #ffffff;
+  }
+}
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-inset: var(--inset);
+  --color-bar: var(--bar);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-ghost: var(--ghost);
+  --color-dot: var(--dot);
+  --color-tread: var(--tread);
+  --color-veil: var(--veil);
+  --color-on-fill: var(--on-fill);
+  --color-btn: var(--btn);
+  --color-btn-ink: var(--btn-ink);
+  --color-road: var(--road);
+  --color-asphalt: var(--asphalt);
+  --color-topo: var(--topo);
+  --color-code-fill: var(--code-fill);
+  --color-route-fill: var(--route-fill);
+  --color-enduro-fill: var(--enduro-fill);
+  --color-code: var(--code);
+  --color-route: var(--route);
+  --color-enduro: var(--enduro);
+  --color-violet: var(--violet);
+  --color-rose: var(--rose);
+  /* The amber and pink ends of the Core Web Vitals bars, the same in both themes. */
+  --color-warn: #f0a000;
+  --color-bad: #f0527a;
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
+
+  --animate-marquee: marquee 40s linear infinite;
+  /* A few blinks, then still: nothing moves for more than 5 seconds on its own (WCAG 2.2.2). */
+  --animate-blink: blink 1.2s steps(1) 4;
+  --animate-road: road 2.4s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    55% {
+      opacity: 1;
+    }
+    56%,
+    100% {
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes road {
+    to {
+      stroke-dashoffset: -80;
+    }
+  }
+}
+
+@utility wrap {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* The dotted ground behind each page's top block. */
+@utility dots {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  a:hover {
+    color: var(--ink-strong);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--route);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--code-fill);
+    color: var(--on-fill);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* Shiki writes both themes inline; the dark one wins with the dark theme. */
+:root[data-theme='dark'] .shiki,
+:root[data-theme='dark'] .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --text: #ececf1;
-    --muted: #a1a1ab;
-    --bg: #121216;
-    --line: #2c2c33;
-    --accent: #a594ff;
-  }
-
-  .shiki,
-  .shiki span {
+  :root:not([data-theme]) .shiki,
+  :root:not([data-theme]) .shiki span {
     color: var(--shiki-dark) !important;
     background-color: var(--shiki-dark-bg) !important;
   }
 }
 
-* {
-  box-sizing: border-box;
+/* Theme switch: the new theme opens in a circle from the button (see ThemeToggle). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-body {
-  margin: 0 auto;
-  max-width: 48rem;
-  padding: 1rem;
-  color: var(--text);
-  background: var(--bg);
+/* Fallback where View Transitions are missing: the colors fade instead. */
+.theme-fade,
+.theme-fade * {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease,
+    border-color 0.45s ease,
+    fill 0.45s ease,
+    stroke 0.45s ease !important;
 }
 
-a {
-  color: var(--accent);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-}
+/*
+ * Pages not redesigned yet (steps 4.2 and 4.3) keep a plain, readable layout on the new tokens.
+ * Removed once every page has its design.
+ */
+@layer components {
+  .legacy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 48rem;
+    padding-block: 3rem 5rem;
+  }
 
-.skip {
-  position: absolute;
-  left: -999px;
-}
+  .legacy h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
 
-.skip:focus {
-  left: 1rem;
-  top: 1rem;
-}
+  .legacy h2 {
+    margin-top: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
 
-.preview {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--accent);
-}
+  .legacy h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 
-.site-header,
-.site-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 1rem 0;
-}
+  .legacy a {
+    color: var(--route);
+    text-underline-offset: 3px;
+  }
 
-.site-header ul,
-.site-footer ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+  /* Rich text: Lexical writes list-bullet / list-number classes, which preflight strips. */
+  .legacy :is(ul, ol):not(.cards, .grid) {
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
 
-.site-name {
-  font-weight: 700;
-}
+  .legacy ol:not(.cards, .grid) {
+    list-style: decimal;
+  }
 
-.site-footer {
-  border-top: 1px solid var(--line);
-  margin-top: 3rem;
-  font-size: 0.9rem;
-}
+  .legacy blockquote {
+    padding-left: 1rem;
+    border-left: 3px solid var(--line-strong);
+    color: var(--ink-2);
+  }
 
-.muted {
-  color: var(--muted);
-}
+  .legacy :is(h4, h5, h6) {
+    font-weight: 600;
+  }
 
-.cards {
-  display: grid;
-  gap: 1.5rem;
-  padding: 0;
-  list-style: none;
-}
+  .legacy .lead {
+    font-size: 1.25rem;
+    color: var(--ink-2);
+  }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 0.75rem;
-  padding: 0;
-  list-style: none;
-}
+  .legacy .muted {
+    color: var(--muted);
+  }
 
-.code pre {
-  overflow-x: auto;
-  padding: 1rem;
-  font-size: 0.9rem;
+  .legacy > *,
+  .legacy article > * {
+    min-width: 0;
+  }
+
+  .legacy article {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .legacy .cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .legacy .cards > li {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+  }
+
+  .legacy .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .legacy dl {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .legacy dt {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .legacy img {
+    border-radius: 0.75rem;
+  }
+
+  .code pre {
+    overflow-x: auto;
+    padding: 1.125rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
 }

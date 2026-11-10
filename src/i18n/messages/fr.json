@@ -10,19 +10,47 @@
     "legal": "Mentions légales",
     "rss": "Flux RSS des notes",
     "switchTo": "English",
-    "switchLabel": "Read in English"
+    "switchLabel": "Read in English",
+    "darkTheme": "Thème sombre",
+    "contact": "contact"
   },
   "preview": {
     "banner": "Aperçu : les brouillons sont affichés.",
     "exit": "Quitter l'aperçu"
   },
   "home": {
-    "featured": "Projets mis en avant",
-    "allProjects": "Tous les projets",
-    "latestNotes": "Dernières notes",
-    "allNotes": "Toutes les notes",
-    "links": "Me trouver",
-    "email": "E-mail"
+    "title": "<line>Moi, c'est {firstName}.</line><line>Du <code>code</code>, de la <road>route</road></line><line>et des <trail>chemins</trail>.</line>",
+    "projects": "Mes projets",
+    "offScreen": "Hors écran",
+    "stack": "Stack : {list}.",
+    "featuredProject": "projet à la une",
+    "currentJob": "en poste",
+    "jobAt": "{role}, à {location}",
+    "since": "depuis {year}",
+    "week": "semaine type",
+    "weekValue": "5 + 2",
+    "weekUnit": "jours",
+    "weekLabel": "Cinq jours de code, deux jours de moto",
+    "code": "code",
+    "road": "route",
+    "enduro": "enduro",
+    "projectsTitle": "Projets",
+    "allProjects": "tous les projets",
+    "backgroundTitle": "Parcours",
+    "allBackground": "Tout le parcours",
+    "cv": "CV (PDF)",
+    "present": "auj.",
+    "notesTitle": "Notes",
+    "allNotes": "toutes les notes",
+    "featuredNote": "à la une",
+    "rss": "flux RSS",
+    "personalTitle": "Hors écran",
+    "allAlbums": "tous les albums",
+    "roadTitle": "Sur la route",
+    "roadBody": "Des kilomètres et des virages.",
+    "enduroTitle": "Dans les chemins",
+    "enduroBody": "L'enduro, en championnats d'Aquitaine et de France.",
+    "pauseStack": "Mettre en pause le défilement"
   },
   "projects": {
     "title": "Projets",
@@ -39,7 +67,9 @@
     "work": "Ce que j'ai fait",
     "result": "Résultat",
     "learnings": "Ce que j'en retiens",
-    "diagram": "Schéma d'architecture"
+    "diagram": "Schéma d'architecture",
+    "testing": "en test · pas encore sorti",
+    "personal": "perso"
   },
   "background": {
     "title": "Parcours",
@@ -93,5 +123,11 @@
     "languages": "Langues",
     "certifications": "Certifications",
     "present": "aujourd'hui"
+  },
+  "visuals": {
+    "webVitals": "Core Web Vitals",
+    "draft": "brouillon",
+    "preview": "aperçu",
+    "published": "publié"
   }
 }
