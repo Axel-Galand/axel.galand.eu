@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
-import { LanguageSwitch } from '@/components/LanguageSwitch'
+import { PageShell } from '@/components/site/PageShell'
 import type { Locale } from '@/i18n/locales'
 import { findPublic } from '@/lib/content'
 import { formatDate } from '@/lib/dates'
@@ -39,8 +39,7 @@ export default async function NotesPage() {
   })
 
   return (
-    <>
-      <LanguageSwitch locale={locale} paths={paths} />
+    <PageShell locale={locale} paths={paths} current="notes" legacy>
       <h1>{t('title')}</h1>
       {docs.length ? (
         <ul className="cards">
@@ -61,6 +60,6 @@ export default async function NotesPage() {
       ) : (
         <p>{t('empty')}</p>
       )}
-    </>
+    </PageShell>
   )
 }

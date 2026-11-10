@@ -38,7 +38,7 @@ export const getReader = cache(async (): Promise<Reader> => {
 // Collections with drafts: the only ones public pages list directly.
 type ContentSlug = Extract<
   CollectionSlug,
-  'case-studies' | 'notes' | 'albums' | 'experiences' | 'skills'
+  'case-studies' | 'notes' | 'albums' | 'experiences' | 'skills' | 'expertises'
 >
 
 // A document exists in a locale other than French only once this localized field is filled.
@@ -47,6 +47,7 @@ const translatedField: Partial<Record<ContentSlug, string>> = {
   notes: 'title',
   albums: 'title',
   experiences: 'role',
+  expertises: 'description',
 }
 
 type PublicFindArgs<TSlug extends ContentSlug> = {

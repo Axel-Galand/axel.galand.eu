@@ -46,6 +46,12 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
 - Aperçu des brouillons : le bouton « Aperçu » de l'admin ouvre `/next/preview`, qui vérifie la
   session Payload avant d'activer le mode brouillon. Les pages vérifient à nouveau la session avant
   de lire un brouillon.
+- Styles en Tailwind 4. Les couleurs sont des variables CSS en `light-dark()` dans
+  `src/app/(frontend)/styles.css` ; le thème est l'attribut `data-theme` de `<html>`, posé avant
+  l'affichage par un script inline (`src/lib/theme.ts`), puis par l'interrupteur. Sans choix du
+  visiteur, il suit le système. Polices auto-hébergées (`src/app/(frontend)/fonts.ts`).
+- Le visuel d'une étude de cas est soit sa couverture, soit une illustration dessinée dans
+  `src/components/visuals/illustrations.tsx` (champ « Visuel »).
 
 ## Branches
 

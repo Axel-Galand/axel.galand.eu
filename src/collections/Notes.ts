@@ -103,5 +103,15 @@ export const Notes: CollectionConfig = {
       label: 'Tags',
       admin: { position: 'sidebar' },
     },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'À la une',
+      admin: {
+        position: 'sidebar',
+        description: "Ouvre la liste des notes et la section Notes de l'accueil.",
+      },
+    },
   ],
 }

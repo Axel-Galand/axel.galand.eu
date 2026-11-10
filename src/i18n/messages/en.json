@@ -10,19 +10,47 @@
     "legal": "Legal notice",
     "rss": "Notes RSS feed",
     "switchTo": "Français",
-    "switchLabel": "Lire en français"
+    "switchLabel": "Lire en français",
+    "darkTheme": "Dark theme",
+    "contact": "contact"
   },
   "preview": {
     "banner": "Preview: drafts are shown.",
     "exit": "Exit preview"
   },
   "home": {
-    "featured": "Featured projects",
-    "allProjects": "All projects",
-    "latestNotes": "Latest notes",
-    "allNotes": "All notes",
-    "links": "Find me",
-    "email": "Email"
+    "title": "<line>I'm {firstName}.</line><line><code>Code</code>, <road>roads</road></line><line>and <trail>trails</trail>.</line>",
+    "projects": "My projects",
+    "offScreen": "Off screen",
+    "stack": "Stack: {list}.",
+    "featuredProject": "featured project",
+    "currentJob": "current job",
+    "jobAt": "{role}, in {location}",
+    "since": "since {year}",
+    "week": "a typical week",
+    "weekValue": "5 + 2",
+    "weekUnit": "days",
+    "weekLabel": "Five days of code, two days on a motorcycle",
+    "code": "code",
+    "road": "road",
+    "enduro": "enduro",
+    "projectsTitle": "Projects",
+    "allProjects": "all projects",
+    "backgroundTitle": "Background",
+    "allBackground": "Full background",
+    "cv": "Resume (PDF)",
+    "present": "now",
+    "notesTitle": "Notes",
+    "allNotes": "all notes",
+    "featuredNote": "featured",
+    "rss": "RSS feed",
+    "personalTitle": "Off screen",
+    "allAlbums": "all albums",
+    "roadTitle": "On the road",
+    "roadBody": "Miles and bends.",
+    "enduroTitle": "Down the trails",
+    "enduroBody": "Enduro, in the Aquitaine and French championships.",
+    "pauseStack": "Pause the scrolling"
   },
   "projects": {
     "title": "Projects",
@@ -39,7 +67,9 @@
     "work": "What I did",
     "result": "Outcome",
     "learnings": "Takeaways",
-    "diagram": "Architecture diagram"
+    "diagram": "Architecture diagram",
+    "testing": "in testing · not released yet",
+    "personal": "personal"
   },
   "background": {
     "title": "Background",
@@ -93,5 +123,11 @@
     "languages": "Languages",
     "certifications": "Certifications",
     "present": "present"
+  },
+  "visuals": {
+    "webVitals": "Core Web Vitals",
+    "draft": "draft",
+    "preview": "preview",
+    "published": "published"
   }
 }

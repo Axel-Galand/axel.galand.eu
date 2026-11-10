@@ -84,7 +84,8 @@ test.describe('public site', () => {
   }) => {
     await page.goto(`${serverURL}/`)
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr')
-    await expect(page.locator('h1')).toHaveText('Axel Galand (e2e)')
+    // The title greets with the profile's first name.
+    await expect(page.locator('h1')).toContainText("Moi, c'est Axel.")
 
     await page.goto(`${serverURL}/en/projects`)
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')

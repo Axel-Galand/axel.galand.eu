@@ -11,7 +11,7 @@ export const Albums: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     preview: previewDocument('albums'),
-    defaultColumns: ['title', 'season', '_status', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'season', '_status', 'updatedAt'],
     group: 'Perso',
   },
   defaultSort: '-season',
@@ -37,6 +37,22 @@ export const Albums: CollectionConfig = {
       required: true,
       label: 'Saison',
       admin: { description: 'Année, par exemple 2026.' },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'category',
+          type: 'select',
+          defaultValue: 'enduro',
+          label: 'Univers',
+          options: [
+            { label: 'Enduro', value: 'enduro' },
+            { label: 'Route', value: 'road' },
+          ],
+        },
+        { name: 'place', type: 'text', localized: true, label: 'Lieu' },
+      ],
     },
     { name: 'description', type: 'textarea', localized: true, label: 'Description' },
     { name: 'cover', type: 'upload', relationTo: 'media', required: true, label: 'Couverture' },

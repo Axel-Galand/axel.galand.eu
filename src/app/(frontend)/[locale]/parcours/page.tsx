@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { skillCategories } from '@/collections/Skills'
-import { LanguageSwitch } from '@/components/LanguageSwitch'
+import { PageShell } from '@/components/site/PageShell'
 import type { Locale } from '@/i18n/locales'
 import { findPublic, findPublicGlobal } from '@/lib/content'
 import { formatMonth, formatPeriod } from '@/lib/dates'
@@ -89,8 +89,7 @@ export default async function BackgroundPage() {
   const education = timeline('education')
 
   return (
-    <>
-      <LanguageSwitch locale={locale} paths={paths} />
+    <PageShell locale={locale} paths={paths} current="background" legacy>
       <h1>{t('title')}</h1>
       {/* The CV exists once the profile is published in this language (see cv.pdf/route.ts). */}
       {profile.name && profile.headline ? (
@@ -161,6 +160,6 @@ export default async function BackgroundPage() {
           </ul>
         </section>
       ) : null}
-    </>
+    </PageShell>
   )
 }
