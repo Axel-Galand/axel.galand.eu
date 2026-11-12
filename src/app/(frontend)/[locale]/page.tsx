@@ -12,9 +12,10 @@ import { ProjectCard, projectSpan } from '@/components/projects/ProjectCard'
 import { projectCardLabels } from '@/components/projects/labels'
 import { RichText } from '@/components/RichText'
 import { accentAt, accents } from '@/components/site/accents'
+import { Universes } from '@/components/personal/Universes'
 import { PageShell } from '@/components/site/PageShell'
 import { SectionTitle } from '@/components/site/SectionTitle'
-import { Road, Topo, Tread } from '@/components/visuals/illustrations'
+import { Tread } from '@/components/visuals/illustrations'
 import type { Locale } from '@/i18n/locales'
 import { findPublic, findPublicGlobal } from '@/lib/content'
 import { documentPath, localizedPath } from '@/lib/paths'
@@ -133,7 +134,7 @@ export default async function HomePage() {
       ) : null}
 
       <section className="dots">
-        <div className="wrap grid items-center gap-14 py-[clamp(3rem,6vw,6rem)] min-[980px]:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+        <div className="wrap grid items-start gap-14 py-[clamp(3rem,6vw,6rem)] min-[980px]:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
           <div className="flex flex-col gap-7">
             <p className="font-mono text-sm text-muted">
               {[profile.location, current?.role, current?.organization].filter(Boolean).join(' · ')}
@@ -463,36 +464,7 @@ export default async function HomePage() {
           {t('personalTitle')}
         </SectionTitle>
         <div className="grid grid-cols-1 gap-4 min-[980px]:grid-cols-12">
-          {(
-            [
-              {
-                key: 'road',
-                art: <Road className="absolute inset-0 size-full" />,
-                ground: 'bg-road',
-                color: 'text-route',
-              },
-              {
-                key: 'enduro',
-                art: <Topo className="absolute inset-0 size-full" />,
-                ground: 'bg-topo',
-                color: 'text-enduro',
-              },
-            ] as const
-          ).map(({ key, art, ground, color }) => (
-            <Link
-              key={key}
-              href={`${personalPath}#${key}`}
-              className={`${card} group flex flex-col overflow-hidden no-underline transition-[border-color,translate] duration-200 hover:-translate-y-[3px] hover:border-faint min-[980px]:col-span-6`}
-            >
-              <span className={`relative block h-[220px] ${ground}`}>{art}</span>
-              <div className="flex flex-col gap-2 px-7 pt-6 pb-7">
-                <h3 className={`text-[34px] leading-[1.05] font-bold tracking-tight ${color}`}>
-                  {t(key === 'road' ? 'roadTitle' : 'enduroTitle')}
-                </h3>
-                <span className="text-ink-2">{t(key === 'road' ? 'roadBody' : 'enduroBody')}</span>
-              </div>
-            </Link>
-          ))}
+          <Universes href={personalPath} />
           {albums.map((album) => (
             <Link
               key={album.id}

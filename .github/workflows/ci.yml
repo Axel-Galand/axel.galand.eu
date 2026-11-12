@@ -61,6 +61,20 @@ jobs:
       # The production server routes and caches differently from `next dev`, which e2e runs on.
       - name: Smoke test the standalone server
         run: bash tests/smoke/standalone.sh
+      # Performance, accessibility, best practices and SEO budgets on the production build (mobile).
+      # On pull requests only: every change reaches prod through one, and the runs take minutes.
+      - name: Lighthouse budgets
+        if: github.event_name == 'pull_request'
+        run: bash tests/lighthouse/run.sh
+      - name: Keep the Lighthouse reports
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          # .lighthouseci is a dot folder: hidden files are left out by default.
+          include-hidden-files: true
       - name: Install the Playwright browser
         run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e

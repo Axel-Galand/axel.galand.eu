@@ -132,19 +132,41 @@
     "next": "note suivante"
   },
   "personal": {
-    "title": "Perso",
+    "title": "Hors écran",
     "description": "Photos de mes saisons d'enduro, et d'ailleurs.",
-    "empty": "Aucun album publié pour l'instant.",
+    "empty": "Aucun album pour l’instant.",
     "season": "Saison {season}",
-    "photos": "{count, plural, =0 {Aucune photo} one {# photo} other {# photos}}"
+    "photos": "{count, plural, =0 {Aucune photo} one {# photo} other {# photos}}",
+    "slug": "perso",
+    "lead": "La moto, sur route et en enduro. Les photos sont rangées par album.",
+    "enduroAlbums": "Albums d'enduro",
+    "roadAlbums": "Albums de route",
+    "road": "route",
+    "enduro": "enduro",
+    "noPhotos": "Pas encore de photo dans cet album.",
+    "open": "Agrandir :",
+    "close": "Fermer",
+    "previous": "Photo précédente",
+    "nextPhoto": "Photo suivante",
+    "counter": "{index} / {total}",
+    "more": "Autres albums",
+    "back": "retour",
+    "all": "Tous les albums",
+    "next": "album suivant",
+    "position": "Photo {index} sur {total}. {alt}"
   },
   "legal": {
-    "title": "Mentions légales"
+    "title": "Mentions légales",
+    "slug": "mentions-legales",
+    "description": "Éditeur, hébergeur, cookies et contenus du site d'Axel Galand."
   },
   "notFound": {
-    "title": "Page introuvable",
+    "title": "Sortie de <trail>piste</trail>.",
     "body": "Cette page n'existe pas, ou pas dans cette langue.",
-    "back": "Retour à l'accueil"
+    "back": "Retour à l'accueil",
+    "badge": "erreur 404",
+    "projects": "Voir les projets",
+    "path": "cette-page"
   },
   "cv": {
     "title": "CV",

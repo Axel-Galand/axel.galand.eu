@@ -14,7 +14,7 @@ const isMcpKeyAsRestKey = (request: NextRequest) =>
 // Everything else is the public site, which next-intl rewrites under /fr or /en: it must never
 // see these, or the healthcheck and the admin would land on a 404.
 const outsideSite = /^\/(?:admin|api|next|_next|__next|healthz)(?:\/|$)/
-const outsideSiteFiles = new Set(['/robots.txt', '/sitemap.xml', '/favicon.ico'])
+const outsideSiteFiles = new Set(['/robots.txt', '/sitemap.xml', '/favicon.ico', '/icon.svg'])
 
 export const isPublicPath = (pathname: string): boolean =>
   !outsideSite.test(pathname) && !outsideSiteFiles.has(pathname)
