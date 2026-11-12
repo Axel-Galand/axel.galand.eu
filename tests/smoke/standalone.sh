@@ -39,7 +39,7 @@ expect_status() {
 
 for path in / /en /projets /en/projects /parcours /en/background /notes /en/notes /perso \
   /en/personal /mentions-legales /en/legal-notice /notes/rss.xml /en/notes/rss.xml \
-  /sitemap.xml /robots.txt /healthz; do
+  /sitemap.xml /robots.txt /healthz /icon.svg; do
   expect_status "$path" 200
 done
 expect_status /nulle-part 404

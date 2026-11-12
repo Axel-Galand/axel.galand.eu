@@ -132,19 +132,41 @@
     "next": "next note"
   },
   "personal": {
-    "title": "Personal",
+    "title": "Off screen",
     "description": "Photos from my enduro seasons, and elsewhere.",
-    "empty": "No album published yet.",
+    "empty": "No album yet.",
     "season": "{season} season",
-    "photos": "{count, plural, =0 {No photos} one {# photo} other {# photos}}"
+    "photos": "{count, plural, =0 {No photos} one {# photo} other {# photos}}",
+    "slug": "personal",
+    "lead": "Motorcycles, on the road and in enduro. The photos are sorted by album.",
+    "enduroAlbums": "Enduro albums",
+    "roadAlbums": "Road albums",
+    "road": "road",
+    "enduro": "enduro",
+    "noPhotos": "No photo in this album yet.",
+    "open": "Enlarge:",
+    "close": "Close",
+    "previous": "Previous photo",
+    "nextPhoto": "Next photo",
+    "counter": "{index} / {total}",
+    "more": "More albums",
+    "back": "back",
+    "all": "All albums",
+    "next": "next album",
+    "position": "Photo {index} of {total}. {alt}"
   },
   "legal": {
-    "title": "Legal notice"
+    "title": "Legal notice",
+    "slug": "legal-notice",
+    "description": "Publisher, host, cookies and content of Axel Galand's site."
   },
   "notFound": {
-    "title": "Page not found",
+    "title": "Off the <trail>track</trail>.",
     "body": "This page does not exist, or not in this language.",
-    "back": "Back to the home page"
+    "back": "Back to the home page",
+    "badge": "error 404",
+    "projects": "See the projects",
+    "path": "this-page"
   },
   "cv": {
     "title": "Résumé",

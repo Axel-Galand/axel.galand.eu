@@ -251,10 +251,10 @@ test.describe('public site', () => {
 
   test('answers unknown pages with a localized 404', async ({ page }) => {
     expect((await page.goto(`${serverURL}/nulle-part`))?.status()).toBe(404)
-    await expect(page.locator('h1')).toHaveText('Page introuvable')
+    await expect(page.locator('h1')).toHaveText('Sortie de piste.')
 
     expect((await page.goto(`${serverURL}/en/nowhere`))?.status()).toBe(404)
-    await expect(page.locator('h1')).toHaveText('Page not found')
+    await expect(page.locator('h1')).toHaveText('Off the track.')
   })
 
   test('previews drafts for the signed-in admin only', async ({ page, request }) => {
@@ -272,7 +272,7 @@ test.describe('public site', () => {
 
     await page.getByRole('link', { name: "Quitter l'aperçu" }).click()
     await expect(page).toHaveURL(`${serverURL}/projets/${slugs.draft}`)
-    await expect(page.locator('h1')).toHaveText('Page introuvable')
+    await expect(page.locator('h1')).toHaveText('Sortie de piste.')
   })
 
   test('refuses to redirect the preview off the site', async ({ page }) => {

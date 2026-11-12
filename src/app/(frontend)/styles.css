@@ -271,6 +271,7 @@
 
   .prose-site a {
     color: var(--route);
+    text-decoration: underline;
     text-underline-offset: 3px;
   }
 
@@ -335,117 +336,8 @@
   }
 }
 
-/*
- * Pages not redesigned yet (steps 4.2 and 4.3) keep a plain, readable layout on the new tokens.
- * Removed once every page has its design.
- */
+/* Code blocks (see CodeBlock), drawn by Shiki inside a figure. */
 @layer components {
-  .legacy {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    max-width: 48rem;
-    padding-block: 3rem 5rem;
-  }
-
-  .legacy h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-  }
-
-  .legacy h2 {
-    margin-top: 1.5rem;
-    font-size: 1.75rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-
-  .legacy h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-
-  .legacy a {
-    color: var(--route);
-    text-underline-offset: 3px;
-  }
-
-  /* Rich text: Lexical writes list-bullet / list-number classes, which preflight strips. */
-  .legacy :is(ul, ol):not(.cards, .grid) {
-    padding-left: 1.25rem;
-    list-style: disc;
-  }
-
-  .legacy ol:not(.cards, .grid) {
-    list-style: decimal;
-  }
-
-  .legacy blockquote {
-    padding-left: 1rem;
-    border-left: 3px solid var(--line-strong);
-    color: var(--ink-2);
-  }
-
-  .legacy :is(h4, h5, h6) {
-    font-weight: 600;
-  }
-
-  .legacy .lead {
-    font-size: 1.25rem;
-    color: var(--ink-2);
-  }
-
-  .legacy .muted {
-    color: var(--muted);
-  }
-
-  .legacy > *,
-  .legacy article > * {
-    min-width: 0;
-  }
-
-  .legacy article {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .legacy .cards {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
-  }
-
-  .legacy .cards > li {
-    padding: 1.5rem;
-    border: 1px solid var(--line);
-    border-radius: 1rem;
-    background: var(--surface);
-  }
-
-  .legacy .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    gap: 0.75rem;
-  }
-
-  .legacy dl {
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .legacy dt {
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    color: var(--muted);
-  }
-
-  .legacy img {
-    border-radius: 0.75rem;
-  }
-
   .code pre {
     overflow-x: auto;
     padding: 1.125rem 1.25rem;

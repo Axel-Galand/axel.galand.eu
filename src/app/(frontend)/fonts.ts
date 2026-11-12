@@ -21,6 +21,7 @@ export const mono = localFont({
   weight: '100 800',
   variable: '--font-jetbrains-mono',
   display: 'swap',
-  // Only labels and code use it: no preload, so it never delays the first paint.
-  preload: false,
+  // Preloaded too: the home page title has a word in it, and a late swap would move the page.
+  adjustFontFallback: false,
+  fallback: ['ui-monospace', 'Menlo', 'monospace'],
 })

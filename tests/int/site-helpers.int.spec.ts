@@ -61,6 +61,7 @@ describe('proxy scope', () => {
       '/_next/image',
       '/robots.txt',
       '/sitemap.xml',
+      '/icon.svg',
     ]) {
       expect(isPublicPath(path), path).toBe(false)
     }
