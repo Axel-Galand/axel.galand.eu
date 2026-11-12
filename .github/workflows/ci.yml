@@ -73,6 +73,8 @@ jobs:
           name: lighthouse
           path: .lighthouseci/
           if-no-files-found: ignore
+          # .lighthouseci is a dot folder: hidden files are left out by default.
+          include-hidden-files: true
       - name: Install the Playwright browser
         run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e

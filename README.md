@@ -59,7 +59,7 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
   (`src/lib/gallery.ts`), et une visionneuse (`<dialog>`, flèches, balayage, une URL `#photo-3`
   par photo). Sans JavaScript, chaque vignette mène à sa photo dans la page.
 - Budgets Lighthouse en CI, sur mobile : performance ≥ 95, accessibilité, bonnes pratiques et SEO à
-  100 (hors audit d'indexabilité, le build étant en noindex), LCP ≤ 3 s, CLS ≤ 0,05, TBT ≤ 200 ms,
+  100 (hors audit d'indexabilité, le build étant en noindex), LCP ≤ 3,5 s, CLS ≤ 0,05, TBT ≤ 200 ms,
   JS ≤ 150 Ko (`tests/lighthouse/`).
 - Le CV PDF embarque Inter et Space Grotesk (`src/lib/cv/fonts/`, licence SIL OFL), copiées dans
   l'image standalone par `outputFileTracingIncludes` ; le test de fumée vérifie qu'elles y sont.
