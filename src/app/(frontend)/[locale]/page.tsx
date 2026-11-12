@@ -8,7 +8,8 @@ import { Marquee } from '@/components/home/Marquee'
 import { WeekGauge } from '@/components/home/WeekGauge'
 import { JsonLd } from '@/components/JsonLd'
 import { Picture } from '@/components/Picture'
-import { ProjectCard } from '@/components/projects/ProjectCard'
+import { ProjectCard, projectSpan } from '@/components/projects/ProjectCard'
+import { projectCardLabels } from '@/components/projects/labels'
 import { RichText } from '@/components/RichText'
 import { accentAt, accents } from '@/components/site/accents'
 import { PageShell } from '@/components/site/PageShell'
@@ -55,21 +56,12 @@ const months = (experience: Experience) => {
   return Number.isFinite(length) ? Math.max(1, length) : 1
 }
 
-/** Grid spans of the project cards: 7 + 5, then 5 + 7, and a lone last card takes the row. */
-const projectSpan = (index: number, count: number) =>
-  count % 2 === 1 && index === count - 1
-    ? 'min-[980px]:col-span-12'
-    : index % 4 === 0 || index % 4 === 3
-      ? 'min-[980px]:col-span-7'
-      : 'min-[980px]:col-span-5'
-
 const card = 'rounded-2xl border border-line bg-surface'
 
 export default async function HomePage() {
   const locale = (await getLocale()) as Locale
   const t = await getTranslations('home')
-  const tProjects = await getTranslations('projects')
-  const tVisuals = await getTranslations('visuals')
+  const cardLabels = await projectCardLabels()
 
   const [
     profile,
@@ -125,14 +117,6 @@ export default async function HomePage() {
   const featured = studies[0]
   const leadNote = featuredNotes[0] ?? latestNotes[0]
   const otherNotes = latestNotes.filter((note) => note.id !== leadNote?.id).slice(0, 2)
-  const cardLabels = {
-    testing: tProjects('testing'),
-    personal: tProjects('personal'),
-    webVitals: tVisuals('webVitals'),
-    draft: tVisuals('draft'),
-    preview: tVisuals('preview'),
-    published: tVisuals('published'),
-  }
   const personalPath = localizedPath('/perso', locale)
 
   return (

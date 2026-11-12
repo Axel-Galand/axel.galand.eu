@@ -88,6 +88,19 @@ export const Profile: GlobalConfig = {
             { name: 'level', type: 'text', required: true, label: 'Niveau' },
           ],
         },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'test',
+              type: 'text',
+              label: 'Test',
+              admin: { description: 'Par exemple « TOEIC ». Avec un score, une jauge s’affiche.' },
+            },
+            { name: 'score', type: 'number', label: 'Score', min: 0 },
+            { name: 'scoreMax', type: 'number', label: 'Score maximal', min: 1 },
+          ],
+        },
       ],
     },
     {

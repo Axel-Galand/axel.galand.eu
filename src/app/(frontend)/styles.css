@@ -51,36 +51,7 @@
   color-scheme: dark;
 }
 
-/* Safari before 17.5 has no light-dark(): it gets the light theme. */
-@supports not (color: light-dark(#000, #fff)) {
-  :root {
-    --bg: #f4f5f7;
-    --surface: #ffffff;
-    --inset: #eef0f4;
-    --bar: #e9ecf1;
-    --line: #dadee6;
-    --line-strong: #b4bbc8;
-    --ink: #0e1116;
-    --ink-strong: #000000;
-    --ink-2: #3a4252;
-    --muted: #586174;
-    --faint: #5f687a;
-    --ghost: #9aa2b1;
-    --dot: #d3d8e1;
-    --tread: #dce0e8;
-    --veil: rgb(255 255 255 / 0.84);
-    --road: #e4ecf7;
-    --asphalt: #c3cedf;
-    --topo: #fbece1;
-    --code: #3f6b00;
-    --route: #0a5fb8;
-    --enduro: #a33a08;
-    --violet: #5b3fc4;
-    --rose: #b4236b;
-    --btn: #0e1116;
-    --btn-ink: #ffffff;
-  }
-}
+/* The build (lightningcss) compiles light-dark() for browsers without it. */
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
@@ -255,6 +226,115 @@
   }
 }
 
+/* Rich text of case studies and notes (Lexical output), on the theme tokens. */
+@layer components {
+  .prose-site {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .prose-site :is(h2, h3, h4) {
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    scroll-margin-top: 1.5rem;
+  }
+
+  .prose-site h2 {
+    margin-top: 1.75rem;
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+
+  .prose-site h3 {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .prose-site h4 {
+    font-size: 1.25rem;
+  }
+
+  .prose-site :is(h5, h6) {
+    color: var(--ink);
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .prose-site :is(h2, h3, h4):first-child {
+    margin-top: 0;
+  }
+
+  .prose-site a {
+    color: var(--route);
+    text-underline-offset: 3px;
+  }
+
+  .prose-site strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .prose-site :is(ul, ol) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.4rem;
+  }
+
+  .prose-site ul {
+    list-style: square;
+  }
+
+  .prose-site ol {
+    list-style: decimal;
+  }
+
+  .prose-site li::marker {
+    color: var(--code);
+  }
+
+  /* A quote is the "À retenir" box: `> **À retenir.** …` in Markdown. */
+  .prose-site blockquote {
+    padding: 1.125rem 1.25rem;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--code) 14%, transparent);
+    color: var(--ink);
+    font-size: 1.0625rem;
+  }
+
+  .prose-site blockquote strong {
+    color: var(--code);
+  }
+
+  .prose-site :not(pre) > code {
+    padding: 0.125rem 0.4375rem;
+    border: 1px solid var(--line);
+    border-radius: 0.375rem;
+    background: var(--inset);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--ink);
+  }
+
+  .prose-site figure {
+    margin-block: 0.5rem;
+  }
+
+  .prose-site figure img {
+    border-radius: 0.75rem;
+    border: 1px solid var(--line);
+  }
+
+  .prose-site hr {
+    border-color: var(--line);
+  }
+}
+
 /*
  * Pages not redesigned yet (steps 4.2 and 4.3) keep a plain, readable layout on the new tokens.
  * Removed once every page has its design.
@@ -369,8 +449,6 @@
   .code pre {
     overflow-x: auto;
     padding: 1.125rem 1.25rem;
-    border: 1px solid var(--line);
-    border-radius: 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.7;

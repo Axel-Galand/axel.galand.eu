@@ -52,6 +52,10 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
   visiteur, il suit le système. Polices auto-hébergées (`src/app/(frontend)/fonts.ts`).
 - Le visuel d'une étude de cas est soit sa couverture, soit une illustration dessinée dans
   `src/components/visuals/illustrations.tsx` (champ « Visuel »).
+- Dans le texte riche, une citation s'affiche en encadré « À retenir » : en Markdown (MCP),
+  `> **À retenir.** …`. Les titres `h2` d'une note forment son sommaire.
+- Le CV PDF embarque Inter et Space Grotesk (`src/lib/cv/fonts/`, licence SIL OFL), copiées dans
+  l'image standalone par `outputFileTracingIncludes` ; le test de fumée vérifie qu'elles y sont.
 
 ## Branches
 

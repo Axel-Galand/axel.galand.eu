@@ -1,31 +1,55 @@
-import { Document, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import path from 'path'
+
+import { Document, Font, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
 import type { Locale } from '@/i18n/locales'
 import type { Experience, Profile, Skill } from '@/payload-types'
 
 import { formatMonth, formatPeriod } from '../dates'
 
-// Helvetica is one of the PDF base fonts: nothing to embed, nothing to trace into the image.
+// The site's fonts, embedded (subset) in the PDF. The files sit in the repo, under the SIL Open Font
+// License (see fonts/OFL-*.txt), and next.config.ts traces them into the standalone image.
+const fonts = path.join(process.cwd(), 'src/lib/cv/fonts')
+
+Font.register({
+  family: 'Inter',
+  fonts: [
+    { src: path.join(fonts, 'inter-latin-400-normal.woff'), fontWeight: 400 },
+    { src: path.join(fonts, 'inter-latin-600-normal.woff'), fontWeight: 600 },
+  ],
+})
+Font.register({
+  family: 'Space Grotesk',
+  fonts: [{ src: path.join(fonts, 'space-grotesk-latin-700-normal.woff'), fontWeight: 700 }],
+})
+// No hyphenation: names and technologies must stay whole.
+Font.registerHyphenationCallback((word) => [word])
+
+// The site's colors, light theme.
+const ink = '#0e1116'
+const muted = '#586174'
+
 const styles = StyleSheet.create({
-  page: { padding: 40, fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.4, color: '#1b1b1f' },
+  page: { padding: 40, fontFamily: 'Inter', fontSize: 10, lineHeight: 1.4, color: ink },
   // A child inherits the page's line height in points (14), too tight for larger text.
-  name: { fontSize: 20, lineHeight: 1.2, fontFamily: 'Helvetica-Bold' },
-  headline: { fontSize: 12, lineHeight: 1.3, marginTop: 4, color: '#5d5d66' },
+  name: { fontSize: 22, lineHeight: 1.2, fontFamily: 'Space Grotesk', fontWeight: 700 },
+  headline: { fontSize: 12, lineHeight: 1.3, marginTop: 4, color: muted },
   contact: { marginTop: 6, flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   section: { marginTop: 16 },
   heading: {
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 1.3,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Space Grotesk',
+    fontWeight: 700,
     marginBottom: 6,
-    paddingBottom: 2,
+    paddingBottom: 3,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e2e6',
+    borderBottomColor: '#dadee6',
   },
   item: { marginBottom: 8 },
-  role: { fontFamily: 'Helvetica-Bold' },
-  muted: { color: '#5d5d66' },
-  link: { color: '#5b3fd6', textDecoration: 'none' },
+  role: { fontWeight: 600 },
+  muted: { color: muted },
+  link: { color: '#0a5fb8', textDecoration: 'none' },
 })
 
 export type CVLabels = {
