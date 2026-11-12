@@ -60,7 +60,7 @@ test.describe('accessibility', () => {
   test.use({ locale: 'fr-FR' })
 
   for (const colorScheme of ['light', 'dark'] as const) {
-    for (const path of ['/', '/page-qui-n-existe-pas']) {
+    for (const path of ['/', '/projets', '/parcours', '/notes', '/page-qui-n-existe-pas']) {
       test(`${path} passes axe in the ${colorScheme} theme`, async ({ page }) => {
         await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' })
         await page.goto(`${serverURL}${path}`)

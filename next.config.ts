@@ -36,6 +36,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // The CV reads its font files at runtime: copy them into the standalone image.
+  outputFileTracingIncludes: {
+    '/[locale]/cv.pdf': ['./src/lib/cv/fonts/*.woff'],
+  },
   experimental: {
     // Pages for unknown slugs are cached too (as 404s): kept in Next's bounded in-memory cache,
     // bots requesting random URLs cannot fill the disk. The cache restarts empty on each deploy.

@@ -68,18 +68,22 @@ id=$(api -X POST "$base/api/notes?locale=fr" \
   python3 -c 'import json, sys; print(json.load(sys.stdin)["doc"]["id"])')
 
 page=$(curl -s "$base/notes/smoke")
-grep -q '<h1>Smoke v1</h1>' <<<"$page" || fail "the published note is not shown"
+grep -Eq '<h1[^>]*>Smoke v1</h1>' <<<"$page" || fail "the published note is not shown"
 grep -q 'class="shiki' <<<"$page" || fail "the code block is not highlighted"
 second=$(curl -s -D - -o /dev/null "$base/notes/smoke")
 grep -qi '^x-nextjs-cache: HIT' <<<"$second" || fail "the note page is not served from the ISR cache"
 
 api -X PATCH "$base/api/notes/$id?locale=fr" -d '{"title":"Smoke v2","_status":"published"}' -o /dev/null
-grep -q '<h1>Smoke v2</h1>' <<<"$(curl -s "$base/notes/smoke")" || fail "the page kept the old title"
+grep -Eq '<h1[^>]*>Smoke v2</h1>' <<<"$(curl -s "$base/notes/smoke")" || fail "the page kept the old title"
 grep -q 'Smoke v2' <<<"$(curl -s "$base/notes")" || fail "the note list kept the old title"
 
 api -X POST "$base/api/globals/profile?locale=fr" \
   -d '{"name":"Smoke","headline":"Smoke","_status":"published"}' -o /dev/null
-[ "$(curl -s "$base/cv.pdf" | head -c 5)" = '%PDF-' ] || fail "the CV is not a PDF"
+curl -s -o "$work/cv.pdf" "$base/cv.pdf"
+[ "$(head -c 5 "$work/cv.pdf")" = '%PDF-' ] || fail "the CV is not a PDF"
+# The font files must be in the image: without them react-pdf fails, or falls back.
+grep -aq 'Inter' "$work/cv.pdf" || fail "the CV does not embed Inter"
+grep -aq 'SpaceGrotesk' "$work/cv.pdf" || fail "the CV does not embed Space Grotesk"
 curl -s -D - -o /dev/null "$base/cv.pdf" | grep -qi '^content-security-policy:' &&
   fail "the PDF got the CSP of the HTML pages"
 # The profile has no English headline: no English CV.

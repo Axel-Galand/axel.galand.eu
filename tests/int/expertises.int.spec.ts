@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { findPublic, type Reader } from '@/lib/content'
 import type { User } from '@/payload-types'
 
-import { createAdmin, mcpRequest, testPayload } from '../helpers/payload'
+import { createAdmin, mcpRequest, paragraph, testPayload } from '../helpers/payload'
 
 let payload: Payload
 let admin: User
@@ -30,6 +30,8 @@ describe('expertises', () => {
 
   afterAll(async () => {
     await payload.delete({ collection: 'expertises', where: mine })
+    await payload.delete({ collection: 'case-studies', where: { slug: { like: marker } } })
+    await payload.delete({ collection: 'notes', where: { slug: { like: marker } } })
     await payload.delete({ collection: 'users', where: { id: { equals: admin.id } } })
   })
 
@@ -97,5 +99,70 @@ describe('expertises', () => {
         overrideAccess: false,
       }),
     ).rejects.toThrow()
+  })
+  it('never lets a linked draft or untranslated document through', async () => {
+    const draft = await payload.create({
+      collection: 'case-studies',
+      draft: true,
+      data: {
+        title: 'Étude en brouillon',
+        slug: `${marker}-draft-study`,
+        summary: 'Résumé',
+        sector: 'Secteur',
+        period: { start: '2024-01-01T00:00:00.000Z' },
+      },
+    })
+    const frenchOnly = await payload.create({
+      collection: 'notes',
+      locale: 'fr',
+      data: {
+        title: 'Note en français',
+        slug: `${marker}-fr-note`,
+        excerpt: 'Chapô',
+        body: paragraph('Corps'),
+        _status: 'published',
+      },
+    })
+    const doc = await payload.create({
+      collection: 'expertises',
+      locale: 'fr',
+      data: {
+        ...expertise('Linked'),
+        caseStudies: [draft.id],
+        notes: [frenchOnly.id],
+        _status: 'published',
+      },
+    })
+    await payload.update({
+      collection: 'expertises',
+      id: doc.id,
+      locale: 'en',
+      data: { description: 'Linked in English', _status: 'published' },
+    })
+
+    const read = async (locale: 'fr' | 'en') =>
+      (
+        await findPublic({
+          collection: 'expertises',
+          where: { id: { equals: doc.id } },
+          locale,
+          depth: 1,
+          reader: visitor,
+        })
+      ).docs[0]
+
+    const french = await read('fr')
+    const english = await read('en')
+
+    // The draft study stays an id, never a populated document, in both languages.
+    expect(french.caseStudies).toEqual([draft.id])
+    expect(english.caseStudies).toEqual([draft.id])
+    // The note is populated in French, and has no title in English (no fallback): pages skip it.
+    expect(french.notes?.map((note) => typeof note === 'object' && note.title)).toEqual([
+      'Note en français',
+    ])
+    expect(english.notes?.map((note) => typeof note === 'object' && Boolean(note.title))).toEqual([
+      false,
+    ])
   })
 })

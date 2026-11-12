@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 import { getPayload, type Payload } from 'payload'
 
@@ -17,6 +18,36 @@ const studyData = (title: string) => ({
   period: { start: '2024-01-01T00:00:00.000Z' },
   context: paragraph('Contexte e2e'),
 })
+
+// Everything the note page styles: two sections (a table of contents), a code block, a quote.
+const block = { format: '' as const, indent: 0, version: 1, direction: 'ltr' as const }
+const words = (text: string) => [
+  { type: 'text', text, detail: 0, format: 0, mode: 'normal', style: '', version: 1 },
+]
+const noteBody = {
+  root: {
+    type: 'root',
+    ...block,
+    children: [
+      { type: 'heading', tag: 'h2', ...block, children: words('Première partie') },
+      { type: 'paragraph', ...block, textFormat: 0, textStyle: '', children: words('Corps e2e') },
+      {
+        type: 'block',
+        format: '',
+        version: 2,
+        fields: {
+          id: 'e2ecode',
+          blockName: '',
+          blockType: 'Code',
+          language: 'ts',
+          code: 'const a = 1',
+        },
+      },
+      { type: 'heading', tag: 'h2', ...block, children: words('Seconde partie') },
+      { type: 'quote', ...block, children: words('À retenir e2e') },
+    ],
+  },
+}
 
 test.describe('public site', () => {
   // A French browser: in English, the home page rightly redirects to /en.
@@ -56,7 +87,7 @@ test.describe('public site', () => {
         title: 'Note e2e',
         slug: slugs.note,
         excerpt: 'Chapô e2e',
-        body: paragraph('Corps e2e'),
+        body: noteBody,
         publishedAt: '2026-01-15T00:00:00.000Z',
         _status: 'published',
       },
@@ -114,6 +145,28 @@ test.describe('public site', () => {
       'CreativeWork',
       'BreadcrumbList',
     ])
+  })
+
+  test('detail pages pass axe in both themes', async ({ page }) => {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' })
+
+      for (const path of [`/projets/${slugs.study}`, `/notes/${slugs.note}`]) {
+        await page.goto(`${serverURL}${path}`)
+        if (path.startsWith('/notes')) {
+          await expect(page.getByRole('navigation', { name: 'sommaire' })).toBeVisible()
+          await expect(page.locator('figure.code .shiki')).toBeVisible()
+        }
+
+        const { violations } = await new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+          .analyze()
+
+        expect(
+          violations.map(({ id, nodes }) => `${colorScheme} ${path} ${id}: ${nodes.length}`),
+        ).toEqual([])
+      }
+    }
   })
 
   test('keeps a French-only note out of English', async ({ page, request }) => {

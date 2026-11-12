@@ -1,6 +1,8 @@
 import { createHighlighterCore, type HighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 
+import { codeLanguages } from '@/collections/Notes'
+
 // Only the grammars the notes editor offers (see `codeLanguages` in Notes.ts): a small server
 // bundle, and the JavaScript regex engine needs no wasm in the standalone image.
 const grammars = {
@@ -59,6 +61,16 @@ export async function CodeBlock({ code, language }: { code: string; language?: s
     themes: { light: 'github-light', dark: 'github-dark' },
   })
 
-  // Shiki escapes the code itself.
-  return <div className="code" dangerouslySetInnerHTML={{ __html: html }} />
+  // Plain text gets a neutral label: the editor's « Texte » would show in English too.
+  const label = language && language !== 'plaintext' ? (codeLanguages[language] ?? 'text') : 'text'
+
+  return (
+    <figure className="code overflow-hidden rounded-xl border border-line bg-surface">
+      <figcaption className="border-b border-line bg-bar px-4 py-2.5 font-mono text-[13px] text-muted">
+        {label}
+      </figcaption>
+      {/* Shiki escapes the code itself. */}
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+    </figure>
+  )
 }

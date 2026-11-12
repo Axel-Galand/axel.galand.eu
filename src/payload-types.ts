@@ -1130,6 +1130,12 @@ export interface Profile {
     | {
         language: string;
         level: string;
+        /**
+         * Par exemple « TOEIC ». Avec un score, une jauge s’affiche.
+         */
+        test?: string | null;
+        score?: number | null;
+        scoreMax?: number | null;
         id?: string | null;
       }[]
     | null;
@@ -1191,6 +1197,9 @@ export interface ProfileSelect<T extends boolean = true> {
     | {
         language?: T;
         level?: T;
+        test?: T;
+        score?: T;
+        scoreMax?: T;
         id?: T;
       };
   certifications?:
