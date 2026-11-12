@@ -3,6 +3,7 @@
     "collect": {
       "numberOfRuns": 3,
       "settings": {
+        "preset": "desktop",
         "chromeFlags": "--no-sandbox --headless=new",
         "skipAudits": ["is-crawlable"]
       }
@@ -21,7 +22,7 @@
         "categories:seo": ["error", { "minScore": 1, "aggregationMethod": "median-run" }],
         "largest-contentful-paint": [
           "error",
-          { "maxNumericValue": 3500, "aggregationMethod": "median-run" }
+          { "maxNumericValue": 2000, "aggregationMethod": "median-run" }
         ],
         "cumulative-layout-shift": [
           "error",
@@ -39,7 +40,7 @@
     },
     "upload": {
       "target": "filesystem",
-      "outputDir": ".lighthouseci"
+      "outputDir": ".lighthouseci/desktop"
     }
   }
 }

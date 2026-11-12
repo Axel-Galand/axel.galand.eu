@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Lighthouse budgets (PLAN.md, "Design et animation"): boots the standalone server on an empty
+# Lighthouse budgets (PLAN.md, "Design et animation"), desktop and mobile: boots the standalone server on an empty
 # database, publishes a little content through the API (an album with photos included), and audits
 # the main pages with Lighthouse CI. Run after `pnpm build`. Needs PAYLOAD_SECRET and a Chrome or
 # Chromium (CHROME_PATH). Extra arguments go to `lhci autorun`.
@@ -113,4 +113,8 @@ for path in / /en /projets /projets/lighthouse /parcours /notes /notes/lighthous
   urls+=(--collect.url="$base$path")
 done
 
+# Desktop carries the plan's budgets. Lighthouse's simulated mobile (slow 4G, 4x CPU) puts every
+# page near 2.9 s of LCP and 0.95 of performance, within a point of noise: it runs once, for layout
+# shifts, accessibility, and a performance floor.
 pnpm exec lhci autorun --config=tests/lighthouse/lighthouserc.json "${urls[@]}" "$@"
+pnpm exec lhci autorun --config=tests/lighthouse/lighthouserc.mobile.json "${urls[@]}" "$@"

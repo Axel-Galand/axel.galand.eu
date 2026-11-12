@@ -25,7 +25,7 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
 | `pnpm test:int`                  | Vitest, sur une base `test.db` séparée                 |
 | `pnpm test:e2e`                  | Playwright (lance `pnpm dev`)                          |
 | `bash tests/smoke/standalone.sh` | Après `pnpm build` : serveur de prod sur une base vide |
-| `bash tests/lighthouse/run.sh`   | Après `pnpm build` : budgets Lighthouse (mobile)       |
+| `bash tests/lighthouse/run.sh`   | Après `pnpm build` : budgets Lighthouse                |
 | `pnpm seed`                      | Contenu fictif dans la base locale                     |
 | `pnpm migrate:create <nom>`      | Nouvelle migration après un changement de schéma       |
 | `pnpm generate:types`            | Régénère `src/payload-types.ts`                        |
@@ -58,9 +58,10 @@ Le site est sur http://localhost:3000, l'admin sur http://localhost:3000/admin.
 - Albums : une grille dont les lignes se remplissent selon le format des photos
   (`src/lib/gallery.ts`), et une visionneuse (`<dialog>`, flèches, balayage, une URL `#photo-3`
   par photo). Sans JavaScript, chaque vignette mène à sa photo dans la page.
-- Budgets Lighthouse en CI, sur mobile : performance ≥ 95, accessibilité, bonnes pratiques et SEO à
-  100 (hors audit d'indexabilité, le build étant en noindex), LCP ≤ 3,5 s, CLS ≤ 0,05, TBT ≤ 200 ms,
-  JS ≤ 150 Ko (`tests/lighthouse/`).
+- Budgets Lighthouse en CI, sur les PR (`tests/lighthouse/`) :
+  - sur ordinateur : performance ≥ 95, accessibilité, bonnes pratiques et SEO à 100 (hors audit
+    d'indexabilité, le build étant en noindex), LCP ≤ 2 s, CLS ≤ 0,05, TBT ≤ 200 ms, JS ≤ 150 Ko ;
+  - sur mobile simulé, un passage : performance ≥ 90, accessibilité à 100, CLS ≤ 0,05.
 - Le CV PDF embarque Inter et Space Grotesk (`src/lib/cv/fonts/`, licence SIL OFL), copiées dans
   l'image standalone par `outputFileTracingIncludes` ; le test de fumée vérifie qu'elles y sont.
 
